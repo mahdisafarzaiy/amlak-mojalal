@@ -1,0 +1,14 @@
+{
+  "background_color": "#000000",
+  "dir": "rtl",
+  "display": "standalone",
+  "name": "املاک مجلل",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "املاک مجلل",
+  "start_url": "/amlak-mojalal/index.html",
+  "theme_color": "#000000",
+  "id": "amlak-mojalal",
+  "description": "اپلیکیشن مدیریت املاک - رهن و اجاره و فروش",
+  "lang": "fa"
+}
