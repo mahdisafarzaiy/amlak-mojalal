@@ -1,0 +1,2463 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>املاک مجلل</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #171512;
+    --bg-panel: #1f1c18;
+    --bg-card: #24211c;
+    --gold: #c9a15a;
+    --gold-soft: #e8cf9d;
+    --cream: #f2ead9;
+    --muted: #9a9184;
+    --line: #38332b;
+    --danger: #b56a5a;
+    --success: #7a9a6d;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0; padding:0; height:100%;
+    background: radial-gradient(1200px 800px at 80% -10%, #221f19 0%, var(--bg) 55%);
+    color: var(--cream);
+    font-family: 'Vazirmatn', Tahoma, sans-serif;
+  }
+  ::selection{ background: var(--gold); color:#171512; }
+
+  .app{ max-width: 720px; margin: 0 auto; min-height:100vh; display:flex; flex-direction:column; }
+
+  header.top{ padding: 30px 20px 18px; text-align:center; position:relative; }
+  .seal{
+    width:46px; height:46px; margin:0 auto 10px;
+    border:1.5px solid var(--gold); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; position:relative;
+  }
+  .seal::before, .seal::after{ content:""; position:absolute; inset:-7px; border:1px solid rgba(201,161,90,0.35); border-radius:50%; }
+  .seal::after{ inset:-13px; border-color: rgba(201,161,90,0.18); }
+  .seal svg{ width:20px; height:20px; }
+  h1.brand{ font-size: 26px; font-weight:800; letter-spacing:0.5px; margin:0; color: var(--gold-soft); }
+  .brand-sub{ margin-top:6px; font-size:12.5px; color:var(--muted); letter-spacing:2px; }
+  .brand-info{
+    margin-top:12px; padding-top:10px; border-top:1px solid var(--line);
+    display:inline-flex; flex-direction:column; gap:4px; align-items:center;
+  }
+  .brand-manager{ font-size:13px; color: var(--gold-soft); font-weight:600; }
+  .brand-address{ font-size:12px; color: var(--muted); }
+  .backup-row{ display:flex; gap:10px; justify-content:center; margin-top:16px; }
+  .backup-btn{
+    display:flex; align-items:center; gap:6px;
+    background: transparent; border:1px solid var(--line); color: var(--muted);
+    padding: 8px 14px; border-radius: 20px; font-family:inherit; font-size:12.5px;
+    cursor:pointer; transition: border-color .15s, color .15s;
+  }
+  .backup-btn:hover{ border-color: var(--gold); color: var(--gold-soft); }
+  .backup-btn svg{ width:14px; height:14px; stroke: currentColor; }
+
+  main{ flex:1; padding: 4px 18px 100px; }
+
+  /* Tabs */
+  .tabs-row{ display:flex; gap:8px; margin-top: 16px; border-bottom: 1px solid var(--line); }
+  .tab-btn{
+    flex:1; padding: 12px 8px; background:transparent; border:none;
+    color: var(--muted); font-family:inherit; font-size:14.5px; font-weight:600;
+    cursor:pointer; position:relative; transition: color .15s;
+  }
+  .tab-btn::after{ content:""; position:absolute; left:0; right:0; bottom:-1px; height:2px; background:transparent; border-radius:2px; transition: background .15s; }
+  .tab-btn:hover{ color: var(--gold-soft); }
+  .tab-btn.active{ color: var(--gold-soft); }
+  .tab-btn.active::after{ background: var(--gold); }
+
+  .toolbar{ display:flex; gap:10px; align-items:center; margin: 18px 0 16px; }
+  .search-wrap{ flex:1; position:relative; }
+  .search-wrap input{
+    width:100%; padding: 12px 42px 12px 14px;
+    background: var(--bg-panel); border:1px solid var(--line);
+    border-radius: 10px; color: var(--cream); font-family:inherit; font-size:14.5px;
+    outline:none; transition: border-color .15s;
+  }
+  .search-wrap input:focus{ border-color: var(--gold); }
+  .search-wrap svg{ position:absolute; right:14px; top:50%; transform:translateY(-50%); width:16px; height:16px; stroke: var(--muted); }
+  .add-btn{
+    flex-shrink:0; width:44px; height:44px; border-radius:10px;
+    border:1px solid var(--gold); background: transparent; color: var(--gold-soft);
+    font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition: background .15s, transform .1s;
+  }
+  .add-btn:hover{ background: rgba(201,161,90,0.12); }
+  .add-btn:active{ transform: scale(0.94); }
+
+  .filter-btn{
+    flex-shrink:0; width:44px; height:44px; border-radius:10px;
+    border:1px solid var(--line); background: transparent; color: var(--muted);
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition: border-color .15s, color .15s, background .15s; position:relative;
+  }
+  .filter-btn svg{ width:18px; height:18px; stroke: currentColor; }
+  .filter-btn:hover{ border-color: var(--gold); color: var(--gold-soft); }
+  .filter-btn.active{ border-color: var(--gold); color: var(--gold-soft); background: rgba(201,161,90,0.1); }
+  .filter-dot{
+    position:absolute; top:-3px; left:-3px; width:9px; height:9px; border-radius:50%;
+    background: var(--gold); display:none;
+  }
+  .filter-dot.show{ display:block; }
+
+  .filter-panel{
+    background: var(--bg-panel); border:1px solid var(--line); border-radius:12px;
+    padding: 14px 16px; margin: -6px 0 16px; display:none; flex-direction:column; gap:12px;
+  }
+  .filter-panel.open{ display:flex; }
+  .filter-group-label{ font-size:12.5px; color: var(--gold-soft); font-weight:600; }
+  .filter-range-row{ display:flex; align-items:center; gap:8px; }
+  .filter-range-row input{
+    flex:1; min-width:0; padding: 10px 12px; background: var(--bg-card); border:1px solid var(--line);
+    border-radius:8px; color: var(--cream); font-family:inherit; font-size:13.5px; outline:none;
+  }
+  .filter-range-row input:focus{ border-color: var(--gold); }
+  .filter-range-sep{ color: var(--muted); font-size:12.5px; flex-shrink:0; }
+  .filter-actions-row{ display:flex; gap:8px; margin-top:2px; }
+  .filter-actions-row button{
+    flex:1; padding: 9px; border-radius:8px; font-size:13px; font-family:inherit; cursor:pointer;
+    border:1px solid var(--line); background:transparent; color: var(--muted);
+  }
+  .filter-actions-row button.primary{ background: var(--gold); border-color: var(--gold); color:#1c1912; font-weight:700; }
+
+  .empty{ text-align:center; color: var(--muted); padding: 60px 20px; border: 1px dashed var(--line); border-radius:14px; font-size:14px; line-height:2; }
+
+  .prop-list{ display:flex; flex-direction:column; gap:10px; }
+  .prop-card{
+    background: var(--bg-card); border:1px solid var(--line); border-radius:12px;
+    padding: 16px 18px; transition: border-color .15s, background .15s;
+  }
+  .prop-card:hover{ border-color: var(--gold); background:#282419; }
+  .prop-card-row{ display:flex; align-items:center; justify-content:space-between; cursor:pointer; gap:10px; }
+  .prop-title{ font-size:15px; font-weight:600; color: var(--cream); }
+  .prop-meta{ font-size:12px; color: var(--muted); margin-top:5px; line-height:1.9; }
+  .prop-price{ font-size:12.5px; color: var(--gold-soft); margin-top:5px; font-weight:600; }
+  .convert-badge{
+    display:inline-block; background: rgba(122,154,109,0.16); color: var(--success);
+    border:1px solid rgba(122,154,109,0.4); border-radius:20px; padding:2px 9px;
+    font-size:11px; font-weight:600; margin-right:6px; vertical-align:middle;
+  }
+  .convert-gate{
+    margin-top:22px; background: var(--bg-card); border:1px solid var(--line);
+    border-radius:16px; padding:18px 16px 20px;
+  }
+  .convert-gate-title{ font-size:14px; font-weight:700; color: var(--gold-soft); text-align:center; }
+  .convert-gate-note{ font-size:11.5px; color: var(--muted); text-align:center; margin-top:4px; }
+  .convert-gate-values{ display:flex; justify-content:space-between; gap:10px; margin:16px 0 8px; }
+  .convert-gate-val{ flex:1; background: var(--bg-panel); border:1px solid var(--line); border-radius:12px; padding:10px; text-align:center; }
+  .convert-gate-lbl{ display:block; font-size:11.5px; color: var(--muted); margin-bottom:4px; }
+  .convert-gate-num{ display:block; font-size:14.5px; font-weight:700; color: var(--gold-soft); direction:ltr; }
+  .convert-gate-slider{
+    -webkit-appearance:none; appearance:none; width:100%; height:6px; border-radius:6px;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--line) 50%, var(--gold) 100%);
+    margin: 14px 0 6px; cursor:pointer;
+  }
+  .convert-gate-slider::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none; width:22px; height:22px; border-radius:50%;
+    background: var(--gold); border:3px solid var(--bg-card); box-shadow:0 0 0 1px var(--gold);
+    cursor:pointer;
+  }
+  .convert-gate-slider::-moz-range-thumb{
+    width:22px; height:22px; border-radius:50%; background: var(--gold);
+    border:3px solid var(--bg-card); box-shadow:0 0 0 1px var(--gold); cursor:pointer;
+  }
+  .convert-gate-hints{ display:flex; justify-content:space-between; font-size:11px; color: var(--muted); margin-bottom:14px; }
+  .convert-gate-reset{
+    display:block; width:100%; padding:10px; border-radius:10px; border:1px solid var(--line);
+    background:transparent; color: var(--muted); font-family:inherit; font-size:12.5px; cursor:pointer;
+    transition: border-color .15s, color .15s;
+  }
+  .convert-gate-reset:hover{ border-color: var(--gold); color: var(--gold-soft); }
+
+  .custom-confirm-overlay{
+    display:none; position:fixed; inset:0; z-index:2000;
+    background: rgba(6,9,8,0.78); align-items:center; justify-content:center; padding:24px;
+  }
+  .custom-confirm-overlay.show{ display:flex; }
+  .custom-confirm-box{
+    width:100%; max-width:340px; background: var(--bg-card); border:1px solid var(--line);
+    border-radius:16px; padding:20px 18px; box-shadow: 0 10px 40px rgba(0,0,0,.5);
+  }
+  .custom-confirm-msg{ font-size:14px; line-height:1.9; color: var(--cream); text-align:center; margin-bottom:18px; }
+  .custom-confirm-actions{ display:flex; gap:10px; }
+
+  .convert-gate-mini{
+    margin-top:14px; padding-top:14px; border-top:1px dashed var(--line); cursor:default;
+  }
+  .convert-gate-mini .convert-gate-values{ margin:2px 0 6px; gap:8px; }
+  .convert-gate-mini .convert-gate-val{ padding:7px; }
+  .convert-gate-mini .convert-gate-lbl{ font-size:10.5px; margin-bottom:2px; }
+  .convert-gate-mini .convert-gate-num{ font-size:13px; }
+  .convert-gate-mini .convert-gate-slider{ margin:8px 0 4px; }
+  .convert-gate-mini .convert-gate-hints{ margin-bottom:0; font-size:10.5px; }
+  .prop-right{ display:flex; align-items:center; gap:10px; }
+  .chev{ width:16px; height:16px; stroke: var(--gold); flex-shrink:0; }
+  .del-prop{ background:none; border:none; color: var(--muted); font-size:16px; cursor:pointer; padding:4px 8px; border-radius:6px; transition: color .15s, background .15s; }
+  .del-prop:hover{ color: var(--danger); background: rgba(181,106,90,0.1); }
+
+  /* generic view show/hide */
+  .view{ display:none; }
+  .view.active{ display:block; }
+
+  .back-row{ display:flex; align-items:center; gap:8px; margin: 18px 0 8px; cursor:pointer; color: var(--gold-soft); font-size:14px; }
+  .back-row svg{ width:16px; height:16px; stroke: var(--gold-soft); }
+
+  /* Wizard */
+  .wizard-head{ margin: 14px 0 4px; }
+  .wizard-cat{ font-size:12.5px; color: var(--gold); font-weight:600; }
+  .wizard-progress{ font-size:12px; color: var(--muted); margin-top:4px; }
+  .progress-bar{ height:4px; background: var(--line); border-radius:4px; margin-top:10px; overflow:hidden; }
+  .progress-fill{ height:100%; background: var(--gold); border-radius:4px; transition: width .2s; }
+
+  .step-card{
+    margin-top: 22px; background: var(--bg-card); border:1px solid var(--line); border-radius:14px;
+    padding: 24px 20px;
+  }
+  .step-label{ font-size:16px; font-weight:700; color: var(--gold-soft); margin-bottom:16px; }
+  .step-input input, .step-input textarea{
+    width:100%; padding: 13px 14px; background: var(--bg-panel); border:1px solid var(--line);
+    border-radius:10px; color: var(--cream); font-family:inherit; font-size:15px; outline:none;
+  }
+  .step-input textarea{ min-height:90px; resize:vertical; }
+  .step-input input:focus, .step-input textarea:focus{ border-color: var(--gold); }
+  .step-hint{ font-size:11.5px; color: var(--muted); margin-top:8px; }
+  .money-hint{ font-size:14px; color: var(--gold-soft); font-weight:700; margin-top:10px; min-height:18px; }
+
+  .photo-drop{
+    border:1.5px dashed var(--line); border-radius:12px; padding: 22px 14px; text-align:center;
+    cursor:pointer; color: var(--muted); font-size:13.5px; transition: border-color .15s, color .15s;
+  }
+  .photo-drop:hover{ border-color: var(--gold); color: var(--gold-soft); }
+  .photo-drop svg{ width:22px; height:22px; stroke: currentColor; margin-bottom:8px; }
+  .photo-grid{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px; }
+  .photo-grid-item{ position:relative; width:96px; height:96px; border-radius:10px; overflow:hidden; border:1px solid var(--line); }
+  .photo-grid-item img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .photo-grid-remove{
+    position:absolute; top:4px; left:4px; background: rgba(23,21,18,0.85); border:1px solid var(--line);
+    color: var(--cream); width:22px; height:22px; border-radius:50%; cursor:pointer; font-size:12px; line-height:1;
+  }
+  .photo-grid-remove:hover{ border-color: var(--danger); color: var(--danger); }
+  .photo-drop-small{
+    width:96px; height:96px; border-radius:10px; border:1.5px dashed var(--line);
+    display:flex; align-items:center; justify-content:center; flex-direction:column; gap:4px;
+    color: var(--muted); font-size:11px; cursor:pointer; text-align:center; padding:4px;
+    transition: border-color .15s, color .15s;
+  }
+  .photo-drop-small:hover{ border-color: var(--gold); color: var(--gold-soft); }
+  .photo-drop-small svg{ width:18px; height:18px; stroke: currentColor; }
+  .photo-count-hint{ font-size:11.5px; color: var(--muted); margin-top:2px; }
+
+  .photo-preview-wrap{ position:relative; display:inline-block; }
+  .photo-preview{ max-width:100%; max-height:220px; border-radius:12px; border:1px solid var(--line); display:block; }
+  .photo-remove{
+    position:absolute; top:8px; left:8px; background: rgba(23,21,18,0.85); border:1px solid var(--line);
+    color: var(--cream); width:28px; height:28px; border-radius:50%; cursor:pointer; font-size:14px;
+  }
+  .photo-remove:hover{ border-color: var(--danger); color: var(--danger); }
+  .review-photo-row{ padding: 12px; }
+  .review-photo-row .review-v{ margin-top:8px; }
+  .detail-photo{ max-width:100%; border-radius:12px; border:1px solid var(--line); margin-bottom:14px; display:block; }
+
+  .option-grid{ display:flex; flex-wrap:wrap; gap:10px; }
+  .option-btn{
+    flex:1; min-width:100px; padding: 14px 10px; text-align:center;
+    background: var(--bg-panel); border:1px solid var(--line); border-radius:10px;
+    color: var(--cream); font-family:inherit; font-size:14.5px; cursor:pointer;
+    transition: border-color .15s, background .15s, color .15s;
+  }
+  .option-btn:hover{ border-color: var(--gold); }
+  .option-btn.selected{ border-color: var(--gold); background: rgba(201,161,90,0.14); color: var(--gold-soft); font-weight:700; }
+
+  .wizard-actions{ display:flex; gap:10px; margin-top:22px; }
+  .wbtn{ flex:1; padding: 13px; border-radius:10px; font-size:14.5px; font-family:inherit; cursor:pointer; border:1px solid var(--line); background:transparent; color:var(--muted); }
+  .wbtn.primary{ background: var(--gold); border-color: var(--gold); color:#1c1912; font-weight:700; }
+  .wbtn.primary:hover{ background: var(--gold-soft); }
+  .wbtn.ghost{ color: var(--muted); }
+  .wizard-cancel{ text-align:center; margin-top:14px; }
+  .wizard-cancel span{ color: var(--muted); font-size:12.5px; cursor:pointer; }
+  .wizard-cancel span:hover{ color: var(--danger); }
+
+  /* Review */
+  .review-list{ display:flex; flex-direction:column; gap:8px; margin-top:16px; }
+  .review-row{
+    background: var(--bg-card); border:1px solid var(--line); border-radius:10px;
+    padding: 12px 16px; display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .review-k{ font-size:12px; color: var(--muted); margin-bottom:3px; }
+  .review-v{ font-size:14px; color: var(--cream); font-weight:600; }
+  .review-edit{ background:none; border:1px solid var(--line); color: var(--gold-soft); font-size:12px; padding:6px 12px; border-radius:8px; cursor:pointer; flex-shrink:0; }
+  .review-edit:hover{ border-color: var(--gold); }
+
+  /* Detail view */
+  .detail-title{ font-size:20px; font-weight:700; color: var(--gold-soft); margin: 10px 0 2px; }
+  .detail-sub{ color: var(--muted); font-size:12.5px; margin-bottom:16px; }
+  .detail-actions{ display:flex; gap:10px; margin-top:20px; }
+
+  .toast{
+    position:fixed; bottom:22px; left:50%; transform: translateX(-50%);
+    background: var(--gold); color:#1c1912; padding: 10px 22px; border-radius:30px;
+    font-size:13.5px; font-weight:600; opacity:0; pointer-events:none; transition: opacity .2s, bottom .2s;
+    z-index:100;
+  }
+  .toast.show{ opacity:1; bottom:36px; }
+
+  /* ---------- extra: loading / gate / carousel / visits / modal ---------- */
+  #menuHidden{ display:none; }
+
+  #loadingScreen{
+    position:fixed; inset:0; z-index:1000;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background: radial-gradient(1200px 800px at 80% -10%, #221f19 0%, var(--bg) 55%);
+    transition: opacity .5s ease;
+  }
+  #loadingScreen.fade-out{ opacity:0; pointer-events:none; }
+  .load-seal{
+    width:92px; height:92px; margin-bottom:26px;
+    border:2px solid var(--gold); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; position:relative;
+  }
+  .load-seal::before, .load-seal::after{ content:""; position:absolute; inset:-12px; border:1px solid rgba(201,161,90,0.35); border-radius:50%; }
+  .load-seal::after{ inset:-24px; border-color: rgba(201,161,90,0.18); }
+  .load-seal svg{ width:42px; height:42px; }
+  .load-brand{ font-size: 52px; font-weight:800; letter-spacing:1px; margin:0; color: var(--gold-soft); text-align:center; }
+  .load-manager{ margin-top:16px; font-size:17px; color: var(--muted); letter-spacing:0.5px; text-align:center; }
+  .load-dots{ margin-top:30px; display:flex; gap:8px; }
+  .load-dots span{ width:9px; height:9px; border-radius:50%; background: var(--gold); opacity:0.35; animation: loadPulse 1.2s ease-in-out infinite; }
+  .load-dots span:nth-child(2){ animation-delay:.2s; }
+  .load-dots span:nth-child(3){ animation-delay:.4s; }
+  @keyframes loadPulse{ 0%,100%{ opacity:0.35; transform: scale(1);} 50%{ opacity:1; transform: scale(1.25);} }
+
+  #gateScreen{
+    max-width: 720px; margin: 0 auto; min-height:100vh; display:flex; flex-direction:column; padding: 0 18px;
+    transition: opacity .4s ease, transform .4s ease;
+  }
+  #gateScreen.leaving{ opacity:0; transform: translateX(-26px); pointer-events:none; }
+  header.top{ padding: 40px 4px 22px; text-align:center; }
+  .brand-sub{ margin-top:8px; font-size:13px; color:var(--muted); letter-spacing:1.5px; }
+  .global-backup-row{ display:flex; gap:10px; justify-content:center; margin-top:20px; flex-wrap:wrap; }
+  .global-backup-btn{
+    display:flex; align-items:center; gap:6px;
+    background: transparent; border:1px solid var(--line); color: var(--muted);
+    padding: 9px 16px; border-radius:20px; font-family:inherit; font-size:12.5px;
+    cursor:pointer; transition: border-color .15s, color .15s;
+  }
+  .global-backup-btn:hover{ border-color: var(--gold); color: var(--gold-soft); }
+  .global-backup-btn svg{ width:14px; height:14px; stroke: currentColor; }
+  .global-backup-note{ text-align:center; font-size:11.5px; color: var(--muted); margin-top:8px; line-height:1.8; }
+
+  .options{ flex:1; display:flex; flex-direction:column; gap:16px; padding: 20px 4px 60px; }
+  .option-card{
+    background: var(--bg-card); border:1px solid var(--line); border-radius:16px;
+    padding: 24px 22px; cursor:pointer; text-align:right;
+    transition: border-color .15s, background .15s, transform .1s;
+    display:flex; align-items:center; gap:16px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .option-card:hover{ border-color: var(--gold); background:#282419; }
+  .option-card:active{ transform: scale(0.98); }
+  .option-icon{
+    flex-shrink:0; width:52px; height:52px; border-radius:12px;
+    background: rgba(201,161,90,0.12); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; pointer-events:none;
+  }
+  .option-icon svg{ width:26px; height:26px; stroke: var(--gold-soft); }
+  .option-body{ flex:1; pointer-events:none; }
+  .option-title{ font-size:16.5px; font-weight:700; color: var(--gold-soft); margin-bottom:6px; }
+  .option-desc{ font-size:13px; color: var(--muted); line-height:1.8; }
+  .option-chev{ width:18px; height:18px; stroke: var(--gold); flex-shrink:0; pointer-events:none; }
+  .gate-security-note{ text-align:center; font-size:12px; color: var(--muted); padding: 0 10px 34px; line-height:1.9; }
+
+  #appScreen{ display:none; flex-direction:column; height:100vh; opacity:0; }
+  #appScreen.show{ display:flex; animation: appIn .5s ease forwards; }
+  @keyframes appIn{ from{ opacity:0; transform:translateX(26px);} to{ opacity:1; transform:none;} }
+  .app-header{ flex-shrink:0; padding: 22px 18px 14px; max-width:720px; margin:0 auto; width:100%; box-sizing:border-box; }
+  .app-header .seal{ width:40px; height:40px; }
+  .app-header h1.brand{ font-size:22px; }
+
+  #carouselViewport{ flex:1; overflow:hidden; position:relative; touch-action: pan-y; direction: ltr; }
+  #carouselTrack{ display:flex; height:100%; direction: ltr; }
+  .panel{
+    flex:0 0 100%; max-width:100%; height:100%; overflow-y:auto;
+    -webkit-overflow-scrolling:touch; box-sizing:border-box; direction: rtl;
+  }
+  .panel-inner{ max-width:720px; margin:0 auto; padding: 4px 18px 110px; }
+  .panel-label{
+    font-size:12px; color: var(--gold); font-weight:700; text-align:center;
+    letter-spacing:1px; padding-top:16px;
+  }
+  .nav-hints{ display:flex; justify-content:space-between; gap:10px; margin: 26px 0 10px; }
+  .top-nav-row{ display:flex; gap:10px; padding-top:18px; margin-bottom:4px; }
+  .top-nav-btn{
+    flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
+    background: var(--bg-card); border:1px solid var(--line); color: var(--gold-soft);
+    padding: 12px 10px; border-radius:14px; font-family:inherit; font-size:13.5px; font-weight:600;
+    cursor:pointer; transition: border-color .15s, background .15s, transform .1s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .top-nav-btn:hover{ border-color: var(--gold); background:#282419; }
+  .top-nav-btn:active{ transform: scale(0.97); }
+  .top-nav-btn svg{ width:15px; height:15px; stroke: var(--gold); }
+  .nav-hint-btn{
+    display:flex; align-items:center; gap:6px; background:transparent; border:1px solid var(--line);
+    color: var(--muted); padding: 9px 15px; border-radius:20px; font-family:inherit; font-size:12.5px;
+    cursor:pointer; transition: border-color .15s, color .15s;
+  }
+  .nav-hint-btn:hover{ border-color: var(--gold); color: var(--gold-soft); }
+  .nav-hint-btn svg{ width:14px; height:14px; stroke:currentColor; }
+
+  .visit-card{
+    background: var(--bg-card); border:1px solid var(--line); border-radius:12px;
+    padding: 14px 18px; display:flex; align-items:center; justify-content:space-between;
+    cursor:pointer; transition: border-color .15s, background .15s; gap:10px;
+  }
+  .visit-card:hover{ border-color: var(--gold); background:#282419; }
+  .visit-name{ font-size:14.5px; font-weight:600; color: var(--cream); }
+  .visit-meta{ font-size:12px; color: var(--muted); margin-top:4px; direction:ltr; text-align:right; }
+  .visit-date{ font-size:12px; color: var(--gold); margin-top:4px; }
+  .visit-note{ font-size:12px; color: var(--muted); margin-top:5px; line-height:1.7; }
+
+  /* ---------- shared overlay / modal (visits + password) ---------- */
+  .overlay{
+    position:fixed; inset:0; background: rgba(6,9,8,0.78);
+    display:none; align-items:flex-end; justify-content:center; z-index:500;
+    backdrop-filter: blur(2px);
+  }
+  .overlay.show{ display:flex; }
+  .modal{
+    width:100%; max-width:720px; background: var(--bg-panel);
+    border:1px solid var(--line); border-bottom:none;
+    border-radius: 22px 22px 0 0; padding: 28px 22px 30px;
+    animation: pSlideUp .2s ease-out;
+    max-height: 90vh; overflow-y:auto; box-sizing:border-box;
+  }
+  @keyframes pSlideUp{ from{ transform: translateY(28px); opacity:0; } to{ transform:none; opacity:1; } }
+  .modal.shake{ animation: pShake .36s; }
+  @keyframes pShake{
+    10%,90%{ transform: translateX(-2px); } 20%,80%{ transform: translateX(4px); }
+    30%,50%,70%{ transform: translateX(-8px); } 40%,60%{ transform: translateX(8px); }
+  }
+  .modal h3{ margin:0 0 8px; font-size:18px; text-align:center; color: var(--gold-soft); }
+  .modal-sub{ font-size:12.5px; color: var(--muted); text-align:center; line-height:1.9; margin-bottom:22px; }
+  .modal label{ font-size:12.5px; color: var(--muted); display:block; margin-bottom:6px; }
+  .modal-field{ position:relative; margin-bottom:14px; }
+  .modal input, .modal textarea{
+    width:100%; padding: 13px 14px; background: var(--bg-card); border:1px solid var(--line);
+    border-radius:10px; color: var(--cream); font-family:inherit; font-size:14.5px; outline:none;
+    transition: border-color .15s; box-sizing:border-box;
+  }
+  .modal input:focus, .modal textarea:focus{ border-color: var(--gold); }
+  .p-eye{
+    position:absolute; left:6px; top:50%; transform: translateY(-50%);
+    background:none; border:none; color: var(--muted); cursor:pointer;
+    width:32px; height:32px; display:flex; align-items:center; justify-content:center;
+    border-radius:8px; transition: color .15s, background .15s;
+  }
+  .p-eye:hover{ color: var(--gold-soft); background: rgba(201,161,90,0.1); }
+  .p-eye svg{ width:18px; height:18px; stroke:currentColor; pointer-events:none; }
+  .p-error{ min-height:16px; font-size:12.5px; color: var(--danger); text-align:center; margin-bottom:6px; }
+  .modal-actions{ display:flex; gap:10px; margin-top:10px; }
+  .m-btn{
+    flex:1; padding: 13px; border-radius:10px; font-size:14.5px; font-family:inherit;
+    cursor:pointer; border:1px solid var(--line); background:transparent; color:var(--muted);
+    transition: border-color .15s, color .15s;
+  }
+  .m-btn:disabled{ opacity:0.6; cursor:default; }
+  .m-btn.primary{ background: var(--gold); border-color: var(--gold); color:#1c1912; font-weight:700; }
+  .m-btn.primary:hover:not(:disabled){ background: var(--gold-soft); }
+  .p-note{ font-size:11px; color: var(--muted); text-align:center; margin-top:16px; line-height:1.9; }
+
+  .g-toast{
+    position:fixed; bottom:22px; left:50%; transform: translateX(-50%);
+    background: var(--gold); color:#1c1912; padding: 10px 22px; border-radius:30px;
+    font-size:13.5px; font-weight:600; opacity:0; pointer-events:none; transition: opacity .2s, bottom .2s;
+    z-index:600; max-width:88%; text-align:center;
+  }
+  .g-toast.show{ opacity:1; bottom:36px; }
+
+</style>
+</head>
+<body>
+
+<div id="loadingScreen">
+  <div class="load-seal">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#c9a15a" stroke-width="1.4">
+      <path d="M4 20V9l4-2v13"/><path d="M8 20V4l5-1.5V20"/><path d="M13 20V7l4 1.5V20"/><path d="M2 19.5c2-1.3 4-1.3 6 0s4 1.3 6 0 4-1.3 6 0" stroke-width="1.6"/>
+    </svg>
+  </div>
+  <h1 class="load-brand">املاک مجلل</h1>
+  <div class="load-manager">مدیریت: محمد صفرزائی</div>
+  <div class="load-dots"><span></span><span></span><span></span></div>
+</div>
+
+<script>
+  // Independent safety-net: this MUST run no matter what happens in the rest of the
+  // app's scripts, so the user is never stuck staring at the loading screen forever.
+  (function(){
+    function hideLoading(){
+      var ls = document.getElementById('loadingScreen');
+      if(!ls) return;
+      ls.classList.add('fade-out');
+      setTimeout(function(){ if(ls && ls.parentNode) ls.parentNode.removeChild(ls); }, 500);
+    }
+    setTimeout(hideLoading, 2200);
+
+    window.addEventListener('error', function(e){
+      hideLoading();
+      try{
+        var box = document.createElement('div');
+        box.style.cssText = 'position:fixed;left:12px;right:12px;bottom:18px;z-index:99999;background:#b56a5a;color:#fff;padding:12px 16px;border-radius:10px;font-family:sans-serif;font-size:12.5px;line-height:1.7;direction:ltr;text-align:left;box-shadow:0 4px 18px rgba(0,0,0,.4);';
+        box.textContent = 'Error: ' + (e && e.message ? e.message : 'unknown') + (e && e.filename ? (' @' + e.filename.split('/').pop() + ':' + e.lineno) : '');
+        document.body.appendChild(box);
+        setTimeout(function(){ if(box.parentNode) box.parentNode.removeChild(box); }, 9000);
+      }catch(err){}
+    });
+
+    // جایگزین امن برای window.confirm(): مرورگرهای توکار داخل اپ‌ها (مثل پیش‌نمایش فایل)
+    // اغلب دیالوگ confirm/alert بومی را نمایش نمی‌دهند و بی‌صدا false برمی‌گردانند،
+    // که باعث می‌شود دکمه‌های حذف/انصراف هیچ واکنشی نشان ندهند. این یک مودال داخلی است
+    // که مستقل از پشتیبانی مرورگر از confirm() همیشه کار می‌کند.
+    window.__customConfirm = function(message){
+      return new Promise(function(resolve){
+        var overlay = document.getElementById('customConfirmOverlay');
+        if(!overlay){ resolve(window.confirm ? confirm(message) : true); return; }
+        document.getElementById('customConfirmMsg').textContent = message;
+        overlay.classList.add('show');
+        var yesBtn = document.getElementById('customConfirmYes');
+        var noBtn = document.getElementById('customConfirmNo');
+        function cleanup(result){
+          overlay.classList.remove('show');
+          yesBtn.removeEventListener('click', onYes);
+          noBtn.removeEventListener('click', onNo);
+          resolve(result);
+        }
+        function onYes(){ cleanup(true); }
+        function onNo(){ cleanup(false); }
+        yesBtn.addEventListener('click', onYes);
+        noBtn.addEventListener('click', onNo);
+      });
+    };
+  })();
+</script>
+
+<div class="custom-confirm-overlay" id="customConfirmOverlay">
+  <div class="custom-confirm-box">
+    <div class="custom-confirm-msg" id="customConfirmMsg"></div>
+    <div class="custom-confirm-actions">
+      <button type="button" class="wbtn" id="customConfirmNo">انصراف</button>
+      <button type="button" class="wbtn primary" id="customConfirmYes">تایید</button>
+    </div>
+  </div>
+</div>
+
+<div id="gateScreen">
+  <header class="top">
+    <div class="seal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#c9a15a" stroke-width="1.4">
+        <path d="M4 20V9l4-2v13"/><path d="M8 20V4l5-1.5V20"/><path d="M13 20V7l4 1.5V20"/><path d="M2 19.5c2-1.3 4-1.3 6 0s4 1.3 6 0 4-1.3 6 0" stroke-width="1.6"/>
+      </svg>
+    </div>
+    <h1 class="brand">املاک مجلل</h1>
+    <div class="brand-sub">برای ادامه یکی از گزینه‌های زیر را انتخاب کنید</div>
+    <div class="brand-info">
+      <div class="brand-manager">مدیریت: محمد صفرزائی</div>
+      <div class="brand-address" dir="ltr">0915 320 49 14 &nbsp;·&nbsp; 0990 685 21 16 &nbsp;·&nbsp; (051) 3733 62 84</div>
+      <div class="brand-address">هنرور ۵ - بین انتظار ۱۳ و ۱۵ - پلاک ۱۸۳</div>
+    </div>
+  </header>
+
+  <div class="options">
+    <div class="option-card" id="gateCreateBtn">
+      <div class="option-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+      </div>
+      <div class="option-body">
+        <div class="option-title">ایجاد فایل جدید</div>
+        <div class="option-desc">یک فضای کاری تازه بسازید و یک رمز عبور اختصاصی برای آن تعیین کنید.</div>
+      </div>
+      <svg class="option-chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    </div>
+
+    <div class="option-card" id="gateImportBtn">
+      <div class="option-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 21V9"/><path d="M17 14l-5-5-5 5"/><path d="M5 3h14"/></svg>
+      </div>
+      <div class="option-body">
+        <div class="option-title">وارد کردن فایل پشتیبان</div>
+        <div class="option-desc">یک فایل پشتیبان قبلی را انتخاب کرده و با رمز عبور آن باز کنید.</div>
+      </div>
+      <svg class="option-chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    </div>
+    <input type="file" id="gateImportFile" accept="application/json" style="display:none">
+  </div>
+
+  <div class="gate-security-note">🔒 اطلاعات شما فقط روی همین دستگاه ذخیره می‌شود و رمزگذاری نسخه‌های پشتیبان به رمز عبوری که انتخاب می‌کنید وابسته است.</div>
+</div>
+
+<div id="appScreen">
+  <header class="top app-header">
+    <div class="seal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#c9a15a" stroke-width="1.4">
+        <path d="M4 20V9l4-2v13"/><path d="M8 20V4l5-1.5V20"/><path d="M13 20V7l4 1.5V20"/><path d="M2 19.5c2-1.3 4-1.3 6 0s4 1.3 6 0 4-1.3 6 0" stroke-width="1.6"/>
+      </svg>
+    </div>
+    <h1 class="brand">املاک مجلل</h1>
+    <div class="brand-info">
+      <div class="brand-manager">مدیریت: محمد صفرزائی</div>
+      <div class="brand-address" dir="ltr">0915 320 49 14 &nbsp;·&nbsp; 0990 685 21 16 &nbsp;·&nbsp; (051) 3733 62 84</div>
+      <div class="brand-address">هنرور ۵ - بین انتظار ۱۳ و ۱۵ - پلاک ۱۸۳</div>
+    </div>
+    <div class="global-backup-row">
+      <button class="global-backup-btn" id="globalExportBtn" title="ذخیره یک فایل پشتیبان رمزگذاری‌شده">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
+        پشتیبان‌گیری
+      </button>
+      <button class="global-backup-btn" id="globalImportBtn" title="بازیابی از فایل پشتیبان رمزگذاری‌شده">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 21V9"/><path d="M17 14l-5-5-5 5"/><path d="M5 3h14"/></svg>
+        بازیابی
+      </button>
+      <input type="file" id="globalImportFile" accept="application/json" style="display:none">
+    </div>
+  </header>
+
+  <div id="carouselViewport">
+    <div id="carouselTrack">
+
+      <section class="panel" id="panelVisits">
+        <div class="panel-inner">
+          <div class="panel-label">ثبت بازدیدها</div>
+
+          <div id="houseListView" class="view active">
+            <div class="toolbar">
+              <div class="search-wrap">
+                <input id="houseSearch" type="text" placeholder="جستجوی خانه…">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+              </div>
+              <button class="add-btn" id="addHouseBtn" title="ثبت خانه جدید">+</button>
+            </div>
+            <div id="houseListWrap"></div>
+          </div>
+
+          <div id="houseDetailView" class="view">
+            <div class="back-row" id="houseDetailBackBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+              بازگشت به لیست خانه‌ها
+            </div>
+            <div id="houseDetailHeader"></div>
+            <div class="toolbar">
+              <div class="search-wrap">
+                <input id="visitorSearch" type="text" placeholder="جستجوی نام بازدیدکننده…">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+              </div>
+              <button class="add-btn" id="addVisitBtn" title="ثبت بازدید جدید">+</button>
+            </div>
+            <div id="visitListWrap"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panelList">
+        <div class="panel-inner">
+          <div class="top-nav-row">
+            <button class="top-nav-btn" id="topNavToMelk">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+              ثبت ملک
+            </button>
+            <button class="top-nav-btn" id="topNavToVisits">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6"/></svg>
+              ثبت بازدید
+            </button>
+          </div>
+<!-- LIST VIEW -->
+    <div id="listView" class="view active">
+      <div class="tabs-row">
+        <button class="tab-btn active" id="tabRent" data-cat="rent">رهن و اجاره</button>
+        <button class="tab-btn" id="tabSale" data-cat="sale">فروش</button>
+      </div>
+      <div class="toolbar">
+        <div class="search-wrap">
+          <input id="propSearch" type="text" placeholder="جستجوی کد یا آدرس…">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        </div>
+        <button class="filter-btn" id="filterToggleBtn" title="فیلتر بازه قیمت">
+          <span class="filter-dot" id="filterDot"></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 5h16M7 12h10M10 19h4"/></svg>
+        </button>
+        <button class="add-btn" id="addPropBtn" title="ثبت ملک جدید">+</button>
+      </div>
+      <div class="filter-panel" id="filterPanel"></div>
+      <div id="propListWrap"></div>
+    </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panelMelk">
+        <div class="panel-inner">
+<!-- WIZARD VIEW -->
+    <div id="wizardView" class="view">
+      <div class="back-row" id="wizardBackBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        بازگشت به لیست
+      </div>
+      <div class="wizard-head">
+        <div class="wizard-cat" id="wizardCatLabel"></div>
+        <div class="wizard-progress" id="wizardProgress"></div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+      <div id="wizardStepArea"></div>
+      <div class="wizard-cancel"><span id="wizardCancelBtn">انصراف از ثبت ملک</span></div>
+    </div>
+
+    <!-- DETAIL VIEW -->
+    <div id="detailView" class="view">
+      <div class="back-row" id="detailBackBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        بازگشت به لیست
+      </div>
+      <div class="detail-title" id="detailTitle"></div>
+      <div class="detail-sub" id="detailSub"></div>
+      <div id="detailFieldsWrap"></div>
+      <div class="detail-actions">
+        <button class="wbtn" id="detailDeleteBtn">حذف ملک</button>
+        <button class="wbtn primary" id="detailEditBtn">ویرایش ملک</button>
+      </div>
+    </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<!-- Password modal: shared by create-new, import(gate), and mid-session backup/restore -->
+<div class="overlay" id="passOverlay">
+  <div class="modal" id="passModalBox">
+    <h3 id="passModalTitle"></h3>
+    <div class="modal-sub" id="passModalSub"></div>
+
+    <div id="passEnterWrap">
+      <label>رمز عبور</label>
+      <div class="modal-field">
+        <input type="password" id="passEnterInput" placeholder="رمز عبور را وارد کنید" autocomplete="off">
+        <button type="button" class="p-eye" data-target="passEnterInput">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="passCreateWrap" style="display:none;">
+      <label>رمز عبور جدید</label>
+      <div class="modal-field">
+        <input type="password" id="passCreateInput" placeholder="حداقل ۴ کاراکتر" autocomplete="off">
+        <button type="button" class="p-eye" data-target="passCreateInput">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <label>تکرار رمز عبور</label>
+      <div class="modal-field">
+        <input type="password" id="passCreateConfirmInput" placeholder="رمز را دوباره وارد کنید" autocomplete="off">
+        <button type="button" class="p-eye" data-target="passCreateConfirmInput">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="p-error" id="passErrorEl"></div>
+
+    <div class="modal-actions">
+      <button class="m-btn" id="cancelPassBtn">انصراف</button>
+      <button class="m-btn primary" id="confirmPassBtn">تایید</button>
+    </div>
+    <div class="p-note">🔒 این رمز فقط روی دستگاه شما نگه‌داری می‌شود و به هیچ سروری ارسال نمی‌شود.</div>
+  </div>
+</div>
+
+<!-- House add/edit modal -->
+<div class="overlay" id="houseOverlay">
+  <div class="modal">
+    <h3 id="houseModalTitle">ثبت خانه جدید</h3>
+    <label>عنوان / آدرس خانه</label>
+    <div class="modal-field"><input type="text" id="houseTitleInput" placeholder="مثلاً برج نگین، طبقه ۴"></div>
+    <label>نام مالک (اختیاری)</label>
+    <div class="modal-field"><input type="text" id="houseOwnerInput" placeholder="نام مالک"></div>
+    <label>شماره تماس (اختیاری)</label>
+    <div class="modal-field"><input type="tel" id="houseOwnerPhoneInput" placeholder="مثلاً ۰۹۱۲۱۲۳۴۵۶۷" dir="ltr" style="text-align:right"></div>
+    <label>توضیحات (اختیاری)</label>
+    <div class="modal-field"><textarea id="houseNoteInput" placeholder="توضیح کوتاه" style="min-height:60px"></textarea></div>
+    <div class="modal-actions">
+      <button class="m-btn" id="cancelHouseBtn">انصراف</button>
+      <button class="m-btn primary" id="confirmHouseBtn">ثبت خانه</button>
+    </div>
+  </div>
+</div>
+
+<!-- Visit add/edit modal -->
+<div class="overlay" id="visitOverlay">
+  <div class="modal">
+    <h3 id="visitModalTitle">ثبت بازدید جدید</h3>
+    <label>نام بازدیدکننده</label>
+    <div class="modal-field"><input type="text" id="visitNameInput" placeholder="نام و نام خانوادگی"></div>
+    <label>شماره تلفن</label>
+    <div class="modal-field"><input type="tel" id="visitPhoneInput" placeholder="مثلاً ۰۹۱۲۱۲۳۴۵۶۷" dir="ltr" style="text-align:right"></div>
+    <label>تاریخ بازدید</label>
+    <div class="modal-field"><input type="text" id="visitDateInput" placeholder="مثلاً ۱۴۰۳/۰۵/۱۲" dir="rtl"></div>
+    <label>توضیحات (اختیاری)</label>
+    <div class="modal-field"><textarea id="visitNoteInput" placeholder="توضیح کوتاه درباره بازدید" style="min-height:70px"></textarea></div>
+    <div class="modal-actions">
+      <button class="m-btn" id="cancelVisitBtn">انصراف</button>
+      <button class="m-btn primary" id="confirmVisitBtn">ثبت بازدید</button>
+    </div>
+  </div>
+</div>
+
+<div class="g-toast" id="toast"></div>
+
+<script>
+(function(){
+  var G_IDB_NAME = 'emlak-mojallal-db';
+  var G_IDB_STORE = 'kv';
+  var G_MELK_KEY = 'emlak-mojallal-melk-data-v1';
+  var G_VISITS_KEY = 'emlak-mojallal-visits-data-v1';
+  var G_LEGACY_HOUSES_KEY = 'emlak-mojallal-data-v2';
+  var G_LEGACY_PIN_KEY = 'emlak-mojallal-edit-pin';
+
+  var sessionPassword = null; // held only in memory for this session, never written to disk
+
+  var gateScreen = document.getElementById('gateScreen');
+  var appScreen = document.getElementById('appScreen');
+
+  function gShowToast(msg){
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 2400);
+  }
+
+  function gOpenIDB(){
+    return new Promise(function(resolve, reject){
+      var req = indexedDB.open(G_IDB_NAME, 1);
+      req.onupgradeneeded = function(){ req.result.createObjectStore(G_IDB_STORE); };
+      req.onsuccess = function(){ resolve(req.result); };
+      req.onerror = function(){ reject(req.error); };
+    });
+  }
+  function gIdbGet(key){
+    return gOpenIDB().then(function(db){
+      return new Promise(function(resolve, reject){
+        var tx = db.transaction(G_IDB_STORE, 'readonly');
+        var req = tx.objectStore(G_IDB_STORE).get(key);
+        req.onsuccess = function(){ resolve(req.result); };
+        req.onerror = function(){ reject(req.error); };
+      });
+    });
+  }
+  function gIdbSet(key, value){
+    return gOpenIDB().then(function(db){
+      return new Promise(function(resolve, reject){
+        var tx = db.transaction(G_IDB_STORE, 'readwrite');
+        tx.objectStore(G_IDB_STORE).put(value, key);
+        tx.oncomplete = function(){ resolve(); };
+        tx.onerror = function(){ reject(tx.error); };
+      });
+    });
+  }
+
+  // ---------- ENCRYPTION (Web Crypto: PBKDF2 + AES-GCM) ----------
+  function bufToB64(buf){
+    var bytes = new Uint8Array(buf);
+    var binary = '';
+    for(var i=0; i<bytes.byteLength; i++){ binary += String.fromCharCode(bytes[i]); }
+    return btoa(binary);
+  }
+  function b64ToBuf(b64){
+    var binary = atob(b64);
+    var bytes = new Uint8Array(binary.length);
+    for(var i=0; i<binary.length; i++){ bytes[i] = binary.charCodeAt(i); }
+    return bytes;
+  }
+  function deriveKey(password, saltBytes, iterations){
+    var enc = new TextEncoder();
+    return crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']).then(function(keyMaterial){
+      return crypto.subtle.deriveKey(
+        { name: 'PBKDF2', salt: saltBytes, iterations: iterations, hash: 'SHA-256' },
+        keyMaterial,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['encrypt', 'decrypt']
+      );
+    });
+  }
+  function encryptPayload(password, obj){
+    var iterations = 150000;
+    var salt = crypto.getRandomValues(new Uint8Array(16));
+    var iv = crypto.getRandomValues(new Uint8Array(12));
+    return deriveKey(password, salt, iterations).then(function(key){
+      var enc = new TextEncoder();
+      var data = enc.encode(JSON.stringify(obj));
+      return crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, key, data).then(function(cipherBuf){
+        return {
+          app: 'emlak-mojallal-encrypted-backup',
+          version: 3,
+          exportedAt: new Date().toISOString(),
+          kdf: 'PBKDF2-SHA256',
+          iterations: iterations,
+          salt: bufToB64(salt),
+          iv: bufToB64(iv),
+          ciphertext: bufToB64(cipherBuf)
+        };
+      });
+    });
+  }
+  function decryptPayload(password, envelope){
+    var salt = b64ToBuf(envelope.salt);
+    var iv = b64ToBuf(envelope.iv);
+    var iterations = envelope.iterations || 150000;
+    var cipherBuf = b64ToBuf(envelope.ciphertext);
+    return deriveKey(password, salt, iterations).then(function(key){
+      return crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, key, cipherBuf);
+    }).then(function(plainBuf){
+      var dec = new TextDecoder();
+      return JSON.parse(dec.decode(plainBuf));
+    }).catch(function(){
+      var err = new Error('رمز عبور اشتباه است یا فایل خراب است');
+      throw err;
+    });
+  }
+  function isValidEnvelope(env){
+    return !!(env && env.ciphertext && env.salt && env.iv);
+  }
+  function downloadEnvelope(envelope){
+    var blob = new Blob([JSON.stringify(envelope, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    var now = new Date();
+    var stamp = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+    a.href = url;
+    a.download = 'پشتیبان-رمزگذاری‌شده-املاک-مجلل-' + stamp + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function buildFullPayload(){
+    return gIdbGet(G_MELK_KEY).catch(function(){ return null; }).then(function(melk){
+      return gIdbGet(G_VISITS_KEY).catch(function(){ return null; }).then(function(visits){
+        return { melk: melk || { properties: [] }, visits: visits || { visits: [] } };
+      });
+    });
+  }
+
+  function restoreDataFromPayload(payload){
+    var hasMelk = payload && payload.melk && Array.isArray(payload.melk.properties);
+    var hasVisits = payload && payload.visits && Array.isArray(payload.visits.visits);
+    var hasLegacyHouses = payload && payload.houses && Array.isArray(payload.houses.houses);
+    if(!hasMelk && !hasVisits && !hasLegacyHouses){
+      throw new Error('این فایل پشتیبان معتبر نیست');
+    }
+    return gIdbSet(G_MELK_KEY, hasMelk ? payload.melk : { properties: [] }).then(function(){
+      return gIdbSet(G_VISITS_KEY, hasVisits ? payload.visits : { visits: [] });
+    });
+  }
+
+  function clearAllData(){
+    localStorage.removeItem(G_LEGACY_HOUSES_KEY);
+    localStorage.removeItem(G_LEGACY_PIN_KEY);
+    return gIdbSet(G_MELK_KEY, { properties: [] }).then(function(){
+      return gIdbSet(G_VISITS_KEY, { visits: [] });
+    });
+  }
+
+  async function refreshAllData(){
+    if(window.__melkReload) await window.__melkReload();
+    if(window.__visitsReload) await window.__visitsReload();
+  }
+
+  // ---------- CAROUSEL ----------
+  var viewport = document.getElementById('carouselViewport');
+  var track = document.getElementById('carouselTrack');
+  var panelIdx = 1;
+  var dragging = false, axis = null, startX = 0, startY = 0, curX = 0;
+
+  function panelPx(i){ return -(i * viewport.clientWidth); }
+  function setTransform(px, animate){
+    track.style.transition = animate ? 'transform .38s cubic-bezier(.22,.61,.36,1)' : 'none';
+    track.style.transform = 'translateX(' + px + 'px)';
+  }
+  function goToPanel(i){
+    i = Math.max(0, Math.min(2, i));
+    panelIdx = i;
+    setTransform(panelPx(panelIdx), true);
+    if(i === 2 && window.__ensureMelkVisible){ window.__ensureMelkVisible(); }
+    if(i === 1 && window.__ensureListVisible){ window.__ensureListVisible(); }
+  }
+  window.goToPanel = goToPanel;
+
+  function dragStart(x, y){ dragging = true; axis = null; startX = x; startY = y; curX = x; setTransform(panelPx(panelIdx), false); }
+  function dragMove(x, y){
+    if(!dragging) return;
+    var dx = x - startX, dy = y - startY;
+    if(axis === null){
+      if(Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+    }
+    if(axis !== 'x') return;
+    curX = x;
+    var drag = dx;
+    if((panelIdx === 0 && dx > 0) || (panelIdx === 2 && dx < 0)) drag = dx * 0.35;
+    setTransform(panelPx(panelIdx) + drag, false);
+  }
+  function dragEnd(){
+    if(!dragging) return;
+    dragging = false;
+    if(axis !== 'x'){ setTransform(panelPx(panelIdx), true); axis = null; return; }
+    var dx = curX - startX;
+    var threshold = viewport.clientWidth * 0.16;
+    var target = panelIdx;
+    if(dx <= -threshold && panelIdx < 2) target = panelIdx + 1;
+    else if(dx >= threshold && panelIdx > 0) target = panelIdx - 1;
+    axis = null;
+    goToPanel(target);
+  }
+  viewport.addEventListener('touchstart', function(e){ var t = e.touches[0]; dragStart(t.clientX, t.clientY); }, {passive:true});
+  viewport.addEventListener('touchmove', function(e){ var t = e.touches[0]; dragMove(t.clientX, t.clientY); }, {passive:true});
+  viewport.addEventListener('touchend', dragEnd);
+  viewport.addEventListener('mousedown', function(e){ dragStart(e.clientX, e.clientY); });
+  window.addEventListener('mousemove', function(e){ if(dragging) dragMove(e.clientX, e.clientY); });
+  window.addEventListener('mouseup', dragEnd);
+  window.addEventListener('resize', function(){ setTransform(panelPx(panelIdx), false); });
+
+  document.getElementById('topNavToMelk').addEventListener('click', function(){ goToPanel(2); });
+  document.getElementById('topNavToVisits').addEventListener('click', function(){ goToPanel(0); });
+
+  // ---------- PASSWORD MODAL (shared) ----------
+  var passOverlay = document.getElementById('passOverlay');
+  var passModalBox = document.getElementById('passModalBox');
+  var passModalTitle = document.getElementById('passModalTitle');
+  var passModalSub = document.getElementById('passModalSub');
+  var passEnterWrap = document.getElementById('passEnterWrap');
+  var passCreateWrap = document.getElementById('passCreateWrap');
+  var passEnterInput = document.getElementById('passEnterInput');
+  var passCreateInput = document.getElementById('passCreateInput');
+  var passCreateConfirmInput = document.getElementById('passCreateConfirmInput');
+  var passErrorEl = document.getElementById('passErrorEl');
+  var confirmPassBtn = document.getElementById('confirmPassBtn');
+  var cancelPassBtn = document.getElementById('cancelPassBtn');
+
+  var passMode = 'enter';
+  var passOnSubmit = null;
+
+  function shakePassModal(){
+    passModalBox.classList.remove('shake');
+    void passModalBox.offsetWidth;
+    passModalBox.classList.add('shake');
+  }
+
+  function openPassModal(mode, opts){
+    passMode = mode;
+    passOnSubmit = opts.onSubmit;
+    passModalTitle.textContent = opts.title || '';
+    passModalSub.textContent = opts.subtitle || '';
+    passErrorEl.textContent = '';
+    passEnterInput.value = '';
+    passCreateInput.value = '';
+    passCreateConfirmInput.value = '';
+    if(mode === 'create'){
+      passEnterWrap.style.display = 'none';
+      passCreateWrap.style.display = '';
+      confirmPassBtn.textContent = 'ایجاد و شروع';
+    } else {
+      passEnterWrap.style.display = '';
+      passCreateWrap.style.display = 'none';
+      confirmPassBtn.textContent = 'باز کردن';
+    }
+    passOverlay.classList.add('show');
+    setTimeout(function(){ (mode === 'create' ? passCreateInput : passEnterInput).focus(); }, 60);
+  }
+  function closePassModal(){ passOverlay.classList.remove('show'); }
+  cancelPassBtn.addEventListener('click', closePassModal);
+  passOverlay.addEventListener('click', function(e){ if(e.target === passOverlay) closePassModal(); });
+
+  document.querySelectorAll('.p-eye').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var target = document.getElementById(btn.dataset.target);
+      if(target.type === 'password'){ target.type = 'text'; } else { target.type = 'password'; }
+    });
+  });
+
+  confirmPassBtn.addEventListener('click', function(){
+    passErrorEl.textContent = '';
+    var password;
+    if(passMode === 'create'){
+      var p1 = passCreateInput.value;
+      var p2 = passCreateConfirmInput.value;
+      if(!p1 || p1.length < 4){ passErrorEl.textContent = 'رمز باید حداقل ۴ کاراکتر باشد'; shakePassModal(); return; }
+      if(p1 !== p2){ passErrorEl.textContent = 'رمز و تکرار آن یکسان نیستند'; shakePassModal(); return; }
+      password = p1;
+    } else {
+      password = passEnterInput.value;
+      if(!password){ passErrorEl.textContent = 'رمز عبور را وارد کنید'; shakePassModal(); return; }
+    }
+    var originalLabel = confirmPassBtn.textContent;
+    confirmPassBtn.disabled = true;
+    confirmPassBtn.textContent = 'در حال بررسی...';
+    Promise.resolve().then(function(){
+      return passOnSubmit(password);
+    }).then(function(){
+      closePassModal();
+    }).catch(function(err){
+      console.error(err);
+      passErrorEl.textContent = (err && err.message) ? err.message : 'خطایی رخ داد';
+      shakePassModal();
+    }).finally(function(){
+      confirmPassBtn.disabled = false;
+      confirmPassBtn.textContent = originalLabel;
+    });
+  });
+
+  // ---------- ENTER APP ----------
+  function enterApp(){
+    gateScreen.classList.add('leaving');
+    setTimeout(function(){
+      gateScreen.style.display = 'none';
+      appScreen.classList.add('show');
+      goToPanel(1);
+      setTransform(panelPx(1), false);
+    }, 380);
+  }
+
+  // ---------- GATE: create-new / import-backup ----------
+  document.getElementById('gateCreateBtn').addEventListener('click', function(){
+    openPassModal('create', {
+      title: 'ایجاد فایل جدید',
+      subtitle: 'یک رمز عبور برای این فایل انتخاب کنید. این رمز برای رمزگذاری نسخه‌های پشتیبان شما استفاده می‌شود، آن را جایی امن نگه دارید چون در صورت فراموشی قابل بازیابی نیست.',
+      onSubmit: function(password){
+        return clearAllData().then(function(){
+          sessionPassword = password;
+          return refreshAllData();
+        }).then(function(){
+          gShowToast('فایل جدید ایجاد شد');
+          enterApp();
+        });
+      }
+    });
+  });
+
+  var gateImportFile = document.getElementById('gateImportFile');
+  document.getElementById('gateImportBtn').addEventListener('click', function(){ gateImportFile.click(); });
+  gateImportFile.addEventListener('change', function(e){
+    var file = e.target.files[0];
+    if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev){
+      var envelope;
+      try{ envelope = JSON.parse(ev.target.result); }
+      catch(err){ gShowToast('فایل انتخابی معتبر نیست'); gateImportFile.value=''; return; }
+      if(!isValidEnvelope(envelope)){ gShowToast('این فایل یک پشتیبان معتبر نیست'); gateImportFile.value=''; return; }
+      openPassModal('enter', {
+        title: 'باز کردن فایل پشتیبان',
+        subtitle: 'رمز عبوری را که هنگام ساخت این فایل تعیین کرده بودید وارد کنید.',
+        onSubmit: function(password){
+          return decryptPayload(password, envelope).then(function(payload){
+            return restoreDataFromPayload(payload);
+          }).then(function(){
+            sessionPassword = password;
+            return refreshAllData();
+          }).then(function(){
+            gShowToast('اطلاعات با موفقیت بازیابی شد');
+            enterApp();
+          });
+        }
+      });
+      gateImportFile.value = '';
+    };
+    reader.readAsText(file, 'utf-8');
+  });
+
+  // ---------- MID-SESSION: export / import from within the app ----------
+  document.getElementById('globalExportBtn').addEventListener('click', function(){
+    if(!sessionPassword){ gShowToast('ابتدا فایل را باز کنید'); return; }
+    buildFullPayload().then(function(payload){
+      return encryptPayload(sessionPassword, payload);
+    }).then(function(envelope){
+      downloadEnvelope(envelope);
+      gShowToast('فایل پشتیبان رمزگذاری‌شده ذخیره شد');
+    }).catch(function(err){
+      console.error(err);
+      gShowToast('خطا در ذخیره پشتیبان');
+    });
+  });
+
+  var globalImportFile = document.getElementById('globalImportFile');
+  document.getElementById('globalImportBtn').addEventListener('click', function(){ globalImportFile.click(); });
+  globalImportFile.addEventListener('change', function(e){
+    var file = e.target.files[0];
+    if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev){
+      var envelope;
+      try{ envelope = JSON.parse(ev.target.result); }
+      catch(err){ gShowToast('فایل انتخابی معتبر نیست'); globalImportFile.value=''; return; }
+      if(!isValidEnvelope(envelope)){ gShowToast('این فایل یک پشتیبان معتبر نیست'); globalImportFile.value=''; return; }
+      window.__customConfirm('اطلاعات فعلی (ملک‌ها و بازدیدها) با اطلاعات این فایل پشتیبان جایگزین می‌شود. آیا مطمئنید؟').then(function(ok){
+        if(!ok){ globalImportFile.value=''; return; }
+        openPassModal('enter', {
+          title: 'رمز عبور فایل پشتیبان',
+          subtitle: 'برای بازیابی این فایل، رمز عبور آن را وارد کنید.',
+          onSubmit: function(password){
+            return decryptPayload(password, envelope).then(function(payload){
+              return restoreDataFromPayload(payload);
+            }).then(function(){
+              sessionPassword = password;
+              return refreshAllData();
+            }).then(function(){
+              goToPanel(1);
+              gShowToast('اطلاعات با موفقیت بازیابی شد');
+            });
+          }
+        });
+        globalImportFile.value = '';
+      });
+    };
+    reader.readAsText(file, 'utf-8');
+  });
+})();
+</script>
+
+<script>
+(async function(){
+(async function(){
+  const STORAGE_KEY = 'emlak-mojallal-melk-data-v1';
+  const IDB_NAME = 'emlak-mojallal-db';
+  const IDB_STORE = 'kv';
+
+  const TYPE_LABELS = { apartment:'آپارتمان', villa:'ویلایی', shop:'مغازه' };
+  const YESNO_LABELS = { yes:'دارد', no:'ندارد' };
+  const DIRECTION_LABELS = { north:'شمالی', south:'جنوبی', east:'شرقی', west:'غربی' };
+  const CATEGORY_LABELS = { rent:'رهن و اجاره', sale:'فروش' };
+
+  const STEP_DEFS = {
+    rent: [
+      { key:'code', label:'کد ملک', type:'text', placeholder:'مثلاً ۱۰۲۳', required:true },
+      { key:'type', label:'نوع ملک', type:'buttons', options:[['apartment','آپارتمان'],['villa','ویلایی'],['shop','مغازه']], required:true },
+      { key:'address', label:'آدرس', type:'textarea', placeholder:'آدرس کامل ملک', required:true },
+      { key:'area', label:'متراژ (متر مربع)', type:'number', placeholder:'مثلاً ۸۵', required:true },
+      { key:'bedrooms', label:'تعداد خواب', type:'number', placeholder:'مثلاً ۲', required:true },
+      { key:'floor', label:'طبقه', type:'text', placeholder:'مثلاً همکف یا ۳', required:false },
+      { key:'parking', label:'پارکینگ', type:'buttons', options:[['yes','دارد'],['no','ندارد']], required:true },
+      { key:'elevator', label:'آسانسور', type:'buttons', options:[['yes','دارد'],['no','ندارد']], required:true },
+      { key:'cabinet', label:'کابینت', type:'text', placeholder:'مثلاً MDF، فلزی', required:false },
+      { key:'floorCover', label:'نوع کف', type:'text', placeholder:'مثلاً سرامیک، پارکت', required:false },
+      { key:'rahn', label:'مبلغ رهن (تومان)', type:'number', placeholder:'مثلاً ۲۰۰۰۰۰۰۰۰', required:true },
+      { key:'ejare', label:'مبلغ اجاره (تومان)', type:'number', placeholder:'مثلاً ۵۰۰۰۰۰۰', required:true },
+      { key:'convertible', label:'قابل تبدیل به رهن کامل', type:'buttons', options:[['yes','دارد'],['no','ندارد']], required:false },
+      { key:'convertMinRahn', label:'حداقل رهن پس از تبدیل (تومان) — اختیاری، خالی=۰', type:'number', placeholder:'مثلاً ۱۰۰۰۰۰۰۰۰', required:false },
+      { key:'convertMaxRahn', label:'حداکثر رهن پس از تبدیل (تومان) — اختیاری، خالی=بدون سقف', type:'number', placeholder:'مثلاً ۴۰۰۰۰۰۰۰۰', required:false },
+      { key:'photo', label:'عکس ملک', type:'photo', required:false }
+    ],
+    sale: [
+      { key:'code', label:'کد ملک', type:'text', placeholder:'مثلاً ۱۰۲۳', required:true },
+      { key:'type', label:'نوع ملک', type:'buttons', options:[['apartment','آپارتمان'],['villa','ویلایی'],['shop','مغازه']], required:true },
+      { key:'address', label:'آدرس', type:'textarea', placeholder:'آدرس کامل ملک', required:true },
+      { key:'area', label:'متراژ (متر مربع)', type:'number', placeholder:'مثلاً ۸۵', required:true },
+      { key:'bedrooms', label:'تعداد خواب', type:'number', placeholder:'مثلاً ۲', required:true },
+      { key:'floor', label:'طبقه', type:'text', placeholder:'مثلاً همکف یا ۳', required:false },
+      { key:'parking', label:'پارکینگ', type:'buttons', options:[['yes','دارد'],['no','ندارد']], required:true },
+      { key:'elevator', label:'آسانسور', type:'buttons', options:[['yes','دارد'],['no','ندارد']], required:true },
+      { key:'cabinet', label:'نوع کابینت', type:'text', placeholder:'مثلاً MDF، فلزی', required:false },
+      { key:'floorCover', label:'نوع کف', type:'text', placeholder:'مثلاً سرامیک، پارکت', required:false },
+      { key:'direction', label:'جهت ملک', type:'buttons', options:[['north','شمالی'],['south','جنوبی'],['east','شرقی'],['west','غربی']], required:true },
+      { key:'price', label:'مبلغ (تومان)', type:'number', placeholder:'مثلاً ۳۵۰۰۰۰۰۰۰۰۰', required:true },
+      { key:'description', label:'توضیحات (اختیاری)', type:'textarea', placeholder:'توضیحات تکمیلی درباره ملک', required:false },
+      { key:'photo', label:'عکس ملک', type:'photo', required:false }
+    ]
+  };
+
+  let data = { properties: [] };
+  let currentCategory = 'rent';
+  let wizard = null; // { mode:'add'|'edit', editId, steps, index, values, jumpToReview }
+  let filters = {
+    rent: { rahnMin:'', rahnMax:'', ejareMin:'', ejareMax:'' },
+    sale: { priceMin:'', priceMax:'' }
+  };
+  let filterPanelOpen = false;
+
+  function openIDB(){
+    return new Promise((resolve, reject)=>{
+      const req = indexedDB.open(IDB_NAME, 1);
+      req.onupgradeneeded = ()=> req.result.createObjectStore(IDB_STORE);
+      req.onsuccess = ()=> resolve(req.result);
+      req.onerror = ()=> reject(req.error);
+    });
+  }
+
+  async function idbGet(key){
+    const db = await openIDB();
+    return new Promise((resolve, reject)=>{
+      const tx = db.transaction(IDB_STORE, 'readonly');
+      const req = tx.objectStore(IDB_STORE).get(key);
+      req.onsuccess = ()=> resolve(req.result);
+      req.onerror = ()=> reject(req.error);
+    });
+  }
+
+  async function idbSet(key, value){
+    const db = await openIDB();
+    return new Promise((resolve, reject)=>{
+      const tx = db.transaction(IDB_STORE, 'readwrite');
+      tx.objectStore(IDB_STORE).put(value, key);
+      tx.oncomplete = ()=> resolve();
+      tx.onerror = ()=> reject(tx.error);
+    });
+  }
+
+  async function loadData(){
+    try{
+      const fromIdb = await idbGet(STORAGE_KEY);
+      if(fromIdb && Array.isArray(fromIdb.properties)) return fromIdb;
+    }catch(e){
+      console.error('خطا در خواندن از IndexedDB', e);
+    }
+    // migration: بازیابی اطلاعات قدیمی از localStorage (نسخه‌های قبلی برنامه)
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(raw){
+        const parsed = JSON.parse(raw);
+        if(parsed && Array.isArray(parsed.properties)){
+          await idbSet(STORAGE_KEY, parsed);
+          localStorage.removeItem(STORAGE_KEY);
+          return parsed;
+        }
+      }
+    }catch(e){
+      console.error('خطا در انتقال اطلاعات قدیمی', e);
+    }
+    return { properties: [] };
+  }
+
+  async function saveData(){
+    try{
+      await idbSet(STORAGE_KEY, data);
+    }catch(e){
+      console.error('خطا در ذخیره‌سازی', e);
+      showToast('خطا در ذخیره‌سازی اطلاعات');
+    }
+  }
+
+  // فشرده‌سازی عکس قبل از ذخیره تا حجم اشغالی خیلی کمتر شود
+  function compressImage(file, maxDim, quality){
+    return new Promise((resolve, reject)=>{
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = ()=>{
+        let { width, height } = img;
+        if(width > maxDim || height > maxDim){
+          if(width > height){ height = Math.round(height * maxDim / width); width = maxDim; }
+          else { width = Math.round(width * maxDim / height); height = maxDim; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        URL.revokeObjectURL(url);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = (e)=>{ URL.revokeObjectURL(url); reject(e); };
+      img.src = url;
+    });
+  }
+
+  function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(()=> t.classList.remove('show'), 1800);
+  }
+
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str == null ? '' : String(str);
+    return div.innerHTML;
+  }
+
+  function formatMoney(v){
+    if(v === undefined || v === null || v === '') return '';
+    const n = Number(v);
+    if(isNaN(n)) return escapeHtml(v);
+    return n.toLocaleString('fa-IR') + ' تومان';
+  }
+
+  const MONEY_KEYS = ['rahn','ejare','price','convertMinRahn','convertMaxRahn'];
+
+  function humanMoney(v){
+    let n = Number(v);
+    if(!v || isNaN(n) || n <= 0) return '';
+    n = Math.round(n);
+    const billion = Math.floor(n / 1e9); n %= 1e9;
+    const million = Math.floor(n / 1e6); n %= 1e6;
+    const thousand = Math.floor(n / 1e3); n %= 1e3;
+    const rest = n;
+    const parts = [];
+    if(billion) parts.push(billion.toLocaleString('fa-IR') + ' میلیارد');
+    if(million) parts.push(million.toLocaleString('fa-IR') + ' میلیون');
+    if(thousand) parts.push(thousand.toLocaleString('fa-IR') + ' هزار');
+    if(rest) parts.push(rest.toLocaleString('fa-IR'));
+    if(parts.length === 0) return '';
+    return parts.join(' و ') + ' تومان';
+  }
+
+  function switchView(name){
+    ['listView','wizardView','detailView'].forEach(id=>{
+      document.getElementById(id).classList.toggle('active', id === name);
+    });
+    if(window.goToPanel && !window.__skipCarouselNav){ window.goToPanel(name === 'listView' ? 1 : 2); }
+  }
+  window.__ensureListVisible = function(){
+    window.__skipCarouselNav = true;
+    switchView('listView');
+    window.__skipCarouselNav = false;
+  };
+
+  // ---------- LIST VIEW ----------
+  const propListWrap = document.getElementById('propListWrap');
+  const propSearch = document.getElementById('propSearch');
+  const tabRent = document.getElementById('tabRent');
+  const tabSale = document.getElementById('tabSale');
+
+  function setCategory(cat){
+    currentCategory = cat;
+    tabRent.classList.toggle('active', cat === 'rent');
+    tabSale.classList.toggle('active', cat === 'sale');
+    propSearch.value = '';
+    renderFilterPanel();
+    renderList();
+  }
+  tabRent.addEventListener('click', ()=> setCategory('rent'));
+  tabSale.addEventListener('click', ()=> setCategory('sale'));
+
+  function propCardMeta(p){
+    const lines = [];
+    lines.push(`${TYPE_LABELS[p.type]||''} · ${p.area||'-'} متر · ${p.bedrooms||'-'} خواب`);
+    if(p.address) lines.push(escapeHtml(p.address).slice(0,60) + (p.address.length>60?'…':''));
+    return lines.join('<br>');
+  }
+
+  function propCardPrice(p){
+    if(p.category === 'rent'){
+      const badge = p.convertible === 'yes' ? ' <span class="convert-badge">قابل تبدیل</span>' : '';
+      return `رهن: ${formatMoney(p.rahn)} &nbsp;|&nbsp; اجاره: ${formatMoney(p.ejare)}${badge}`;
+    }
+    return `قیمت: ${formatMoney(p.price)}`;
+  }
+
+  function inRange(value, min, max){
+    const n = Number(value);
+    if(min !== '' && min !== undefined && min !== null){
+      if(isNaN(n) || n < Number(min)) return false;
+    }
+    if(max !== '' && max !== undefined && max !== null){
+      if(isNaN(n) || n > Number(max)) return false;
+    }
+    return true;
+  }
+
+  function passesPriceFilter(p){
+    const f = filters[currentCategory];
+    if(currentCategory === 'rent'){
+      return inRange(p.rahn, f.rahnMin, f.rahnMax) && inRange(p.ejare, f.ejareMin, f.ejareMax);
+    }
+    return inRange(p.price, f.priceMin, f.priceMax);
+  }
+
+  function hasActiveFilter(){
+    const f = filters[currentCategory];
+    return Object.values(f).some(v => v !== '' && v !== undefined && v !== null);
+  }
+
+  function renderList(){
+    const q = propSearch.value.trim().toLowerCase();
+    const inCat = data.properties.filter(p => p.category === currentCategory);
+    const filtered = inCat.filter(p =>
+      ((p.code||'').toLowerCase().includes(q) || (p.address||'').toLowerCase().includes(q)) &&
+      passesPriceFilter(p)
+    );
+    const filterDot = document.getElementById('filterDot');
+    if(filterDot) filterDot.classList.toggle('show', hasActiveFilter());
+    if(inCat.length === 0){
+      const label = CATEGORY_LABELS[currentCategory];
+      propListWrap.innerHTML = `<div class="empty">هنوز ملکی در بخش «${label}» ثبت نشده.<br>برای شروع روی دکمه + بزنید.</div>`;
+      return;
+    }
+    if(filtered.length === 0){
+      propListWrap.innerHTML = `<div class="empty">ملکی با این مشخصات پیدا نشد.</div>`;
+      return;
+    }
+    propListWrap.innerHTML = `<div class="prop-list">${filtered.map(p => `
+      <div class="prop-card" data-id="${p.id}">
+        <div class="prop-card-row">
+          <div>
+            <div class="prop-title">کد ${escapeHtml(p.code)} · ${TYPE_LABELS[p.type]||''}</div>
+            <div class="prop-meta">${propCardMeta(p)}</div>
+            <div class="prop-price">${propCardPrice(p)}</div>
+          </div>
+          <div class="prop-right">
+            <button class="del-prop" data-del="${p.id}" title="حذف">✕</button>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+          </div>
+        </div>
+        ${p.category === 'rent' && p.convertible === 'yes' ? renderConvertGate(p, {mini:true, uid:'card-'+p.id}) : ''}
+      </div>
+    `).join('')}</div>`;
+
+    propListWrap.querySelectorAll('.prop-card').forEach(card=>{
+      const p = filtered.find(x=>x.id===card.dataset.id);
+      if(p && p.category === 'rent' && p.convertible === 'yes'){
+        initConvertGate(card, 'card-'+p.id);
+      }
+    });
+    propListWrap.querySelectorAll('.prop-card-row').forEach(row=>{
+      row.addEventListener('click', (e)=>{
+        if(e.target.closest('.del-prop')) return;
+        openDetail(row.closest('.prop-card').dataset.id);
+      });
+    });
+    propListWrap.querySelectorAll('[data-del]').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        const id = btn.dataset.del;
+        const p = data.properties.find(x=>x.id===id);
+        window.__customConfirm(`ملک با کد «${p.code}» حذف شود؟ این کار قابل بازگشت نیست.`).then(ok=>{
+          if(!ok) return;
+          data.properties = data.properties.filter(x=>x.id!==id);
+          saveData();
+          renderList();
+          showToast('ملک حذف شد');
+        });
+      });
+    });
+  }
+
+  propSearch.addEventListener('input', renderList);
+
+  const filterPanel = document.getElementById('filterPanel');
+  const filterToggleBtn = document.getElementById('filterToggleBtn');
+
+  function renderFilterPanel(){
+    const f = filters[currentCategory];
+    let fieldsHtml = '';
+    if(currentCategory === 'rent'){
+      fieldsHtml = `
+        <div>
+          <div class="filter-group-label">بازه مبلغ رهن (تومان)</div>
+          <div class="filter-range-row">
+            <input type="number" id="fRahnMin" placeholder="از" value="${f.rahnMin}">
+            <span class="filter-range-sep">تا</span>
+            <input type="number" id="fRahnMax" placeholder="تا" value="${f.rahnMax}">
+          </div>
+          <div class="step-hint filter-money-hint" id="fRahnHint"></div>
+        </div>
+        <div>
+          <div class="filter-group-label">بازه مبلغ اجاره (تومان)</div>
+          <div class="filter-range-row">
+            <input type="number" id="fEjareMin" placeholder="از" value="${f.ejareMin}">
+            <span class="filter-range-sep">تا</span>
+            <input type="number" id="fEjareMax" placeholder="تا" value="${f.ejareMax}">
+          </div>
+          <div class="step-hint filter-money-hint" id="fEjareHint"></div>
+        </div>
+      `;
+    } else {
+      fieldsHtml = `
+        <div>
+          <div class="filter-group-label">بازه قیمت (تومان)</div>
+          <div class="filter-range-row">
+            <input type="number" id="fPriceMin" placeholder="از" value="${f.priceMin}">
+            <span class="filter-range-sep">تا</span>
+            <input type="number" id="fPriceMax" placeholder="تا" value="${f.priceMax}">
+          </div>
+          <div class="step-hint filter-money-hint" id="fPriceHint"></div>
+        </div>
+      `;
+    }
+    filterPanel.innerHTML = `
+      ${fieldsHtml}
+      <div class="filter-actions-row">
+        <button id="filterClearBtn">پاک کردن</button>
+        <button class="primary" id="filterApplyBtn">اعمال فیلتر</button>
+      </div>
+    `;
+
+    function rangeHintText(minEl, maxEl){
+      const minV = minEl.value.trim();
+      const maxV = maxEl.value.trim();
+      const minText = minV ? humanMoney(minV) : '';
+      const maxText = maxV ? humanMoney(maxV) : '';
+      if(!minText && !maxText) return '';
+      if(minText && maxText) return `از ${minText} تا ${maxText}`;
+      if(minText) return `از ${minText}`;
+      return `تا ${maxText}`;
+    }
+
+    function wireHint(minId, maxId, hintId){
+      const minEl = document.getElementById(minId);
+      const maxEl = document.getElementById(maxId);
+      const hintEl = document.getElementById(hintId);
+      const update = ()=>{ hintEl.textContent = rangeHintText(minEl, maxEl); };
+      minEl.addEventListener('input', update);
+      maxEl.addEventListener('input', update);
+      update();
+    }
+
+    if(currentCategory === 'rent'){
+      wireHint('fRahnMin', 'fRahnMax', 'fRahnHint');
+      wireHint('fEjareMin', 'fEjareMax', 'fEjareHint');
+    } else {
+      wireHint('fPriceMin', 'fPriceMax', 'fPriceHint');
+    }
+
+    const applyBtn = document.getElementById('filterApplyBtn');
+    applyBtn.addEventListener('click', ()=>{
+      if(currentCategory === 'rent'){
+        f.rahnMin = document.getElementById('fRahnMin').value.trim();
+        f.rahnMax = document.getElementById('fRahnMax').value.trim();
+        f.ejareMin = document.getElementById('fEjareMin').value.trim();
+        f.ejareMax = document.getElementById('fEjareMax').value.trim();
+      } else {
+        f.priceMin = document.getElementById('fPriceMin').value.trim();
+        f.priceMax = document.getElementById('fPriceMax').value.trim();
+      }
+      renderList();
+      showToast('فیلتر اعمال شد');
+    });
+
+    document.getElementById('filterClearBtn').addEventListener('click', ()=>{
+      Object.keys(f).forEach(k=> f[k] = '');
+      renderFilterPanel();
+      renderList();
+    });
+  }
+
+  filterToggleBtn.addEventListener('click', ()=>{
+    filterPanelOpen = !filterPanelOpen;
+    filterPanel.classList.toggle('open', filterPanelOpen);
+    filterToggleBtn.classList.toggle('active', filterPanelOpen);
+    if(filterPanelOpen) renderFilterPanel();
+  });
+
+  document.getElementById('addPropBtn').addEventListener('click', ()=>{
+    startWizard('add', currentCategory, null);
+  });
+
+  // ---------- WIZARD ----------
+  const wizardCatLabel = document.getElementById('wizardCatLabel');
+  const wizardProgress = document.getElementById('wizardProgress');
+  const progressFill = document.getElementById('progressFill');
+  const wizardStepArea = document.getElementById('wizardStepArea');
+
+  function startWizard(mode, category, propertyId){
+    const steps = STEP_DEFS[category];
+    if(!steps){
+      showToast('این ملک به‌درستی ثبت نشده و قابل ویرایش نیست (نوع ملک نامعتبر است)');
+      return;
+    }
+    let values = {};
+    if(mode === 'edit'){
+      const p = data.properties.find(x=>x.id===propertyId);
+      if(!p){ showToast('این ملک دیگر وجود ندارد'); exitWizard(); return; }
+      // کپی عمیق می‌گیریم تا تغییرات ناتمام در فرم (مخصوصاً عکس‌ها) هرگز
+      // روی رکورد ذخیره‌شده اثر نگذارد، حتی اگر کاربر ویرایش را لغو کند
+      values = JSON.parse(JSON.stringify(p));
+    }
+    if(typeof values.photo === 'string' && values.photo){
+      values.photo = [values.photo];
+    } else if(!Array.isArray(values.photo)){
+      values.photo = [];
+    }
+    wizard = { mode, category, editId: propertyId, steps, index: mode==='edit' ? steps.length : 0, values, jumpToReview:false };
+    wizardCatLabel.textContent = (mode==='edit' ? 'ویرایش ملک — ' : 'ثبت ملک جدید — ') + CATEGORY_LABELS[category];
+    switchView('wizardView');
+    renderWizardStep();
+  }
+
+  document.getElementById('wizardBackBtn').addEventListener('click', ()=> exitWizard());
+  document.getElementById('wizardCancelBtn').addEventListener('click', ()=>{
+    window.__customConfirm('از ثبت این ملک انصراف می‌دهید؟ اطلاعات وارد شده ذخیره نخواهد شد.').then(ok=>{ if(ok) exitWizard(); });
+  });
+
+  function exitWizard(){
+    wizard = null;
+    detailId = null;
+    switchView('listView');
+    renderList();
+  }
+
+  function renderWizardStep(){
+    const total = wizard.steps.length;
+    const isReview = wizard.index >= total;
+
+    if(isReview){
+      wizardProgress.textContent = 'بازبینی نهایی';
+      progressFill.style.width = '100%';
+      renderReview();
+      return;
+    }
+
+    const step = wizard.steps[wizard.index];
+    wizardProgress.textContent = `مرحله ${wizard.index+1} از ${total}`;
+    progressFill.style.width = `${Math.round(((wizard.index)/total)*100)}%`;
+
+    let inputHtml = '';
+    if(step.type === 'photo'){
+      const photos = Array.isArray(wizard.values[step.key]) ? wizard.values[step.key] : [];
+      const gridItems = photos.map((src, i)=>`
+        <div class="photo-grid-item" data-photo-idx="${i}">
+          <img src="${src}">
+          <button type="button" class="photo-grid-remove" data-remove-idx="${i}" title="حذف عکس">✕</button>
+        </div>
+      `).join('');
+      inputHtml = `
+        <div class="photo-grid">
+          ${gridItems}
+          <div class="photo-drop-small" id="photoDrop">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+            <span>افزودن عکس</span>
+          </div>
+        </div>
+        <input type="file" id="stepPhotoInput" accept="image/*" multiple style="display:none">
+        <div class="step-hint">می‌توانید چند عکس همزمان انتخاب کنید (حداقل ۳ عکس پیشنهاد می‌شود). عکس‌ها به‌طور خودکار برای صرفه‌جویی در حجم فشرده می‌شوند.</div>
+        <div class="photo-count-hint">${photos.length} عکس انتخاب شده</div>
+      `;
+    } else if(step.type === 'buttons'){
+      inputHtml = `<div class="option-grid">${step.options.map(([v,l])=>`
+        <button type="button" class="option-btn ${wizard.values[step.key]===v?'selected':''}" data-val="${v}">${l}</button>
+      `).join('')}</div>`;
+    } else if(step.type === 'textarea'){
+      inputHtml = `<div class="step-input"><textarea id="stepInput" placeholder="${step.placeholder||''}">${escapeHtml(wizard.values[step.key]||'')}</textarea></div>`;
+    } else {
+      const inputType = step.type === 'number' ? 'number' : 'text';
+      inputHtml = `<div class="step-input"><input id="stepInput" type="${inputType}" placeholder="${step.placeholder||''}" value="${escapeHtml(wizard.values[step.key]||'')}"></div>`;
+      if(MONEY_KEYS.includes(step.key)){
+        inputHtml += `<div class="step-hint money-hint" id="moneyHint">${humanMoney(wizard.values[step.key])}</div>`;
+      }
+    }
+
+    const isFirst = wizard.index === 0;
+    const nextLabel = wizard.jumpToReview ? 'بازگشت به بازبینی' : (wizard.index === total-1 ? 'بازبینی نهایی' : 'بعدی');
+
+    wizardStepArea.innerHTML = `
+      <div class="step-card">
+        <div class="step-label">${step.label}${step.required ? '' : ' (اختیاری)'}</div>
+        ${inputHtml}
+      </div>
+      <div class="wizard-actions">
+        ${isFirst ? '' : `<button class="wbtn ghost" id="prevBtn">قبلی</button>`}
+        <button class="wbtn primary" id="nextBtn">${nextLabel}</button>
+      </div>
+    `;
+
+    if(step.type === 'buttons'){
+      wizardStepArea.querySelectorAll('.option-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          wizard.values[step.key] = btn.dataset.val;
+          wizardStepArea.querySelectorAll('.option-btn').forEach(b=> b.classList.toggle('selected', b===btn));
+        });
+      });
+    }
+
+    if(step.type === 'photo'){
+      const photoInput = document.getElementById('stepPhotoInput');
+      const photoDrop = document.getElementById('photoDrop');
+      if(!Array.isArray(wizard.values[step.key])) wizard.values[step.key] = [];
+      if(photoDrop) photoDrop.addEventListener('click', ()=> photoInput.click());
+      wizardStepArea.querySelectorAll('[data-remove-idx]').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const idx = Number(btn.dataset.removeIdx);
+          wizard.values[step.key].splice(idx, 1);
+          renderWizardStep();
+        });
+      });
+      const MAX_PHOTOS = 20;
+      if(photoInput) photoInput.addEventListener('change', async (e)=>{
+        const files = Array.from(e.target.files || []);
+        if(!files.length) return;
+        const current = wizard.values[step.key];
+        const room = MAX_PHOTOS - current.length;
+        if(room <= 0){
+          showToast(`حداکثر ${MAX_PHOTOS} عکس مجاز است`);
+          e.target.value = '';
+          return;
+        }
+        const toProcess = files.slice(0, room);
+        if(files.length > toProcess.length){
+          showToast(`حداکثر ${MAX_PHOTOS} عکس مجاز است، فقط ${toProcess.length} عکس اضافه شد`);
+        }
+        for(const file of toProcess){
+          if(file.size > 25 * 1024 * 1024){
+            showToast('یکی از عکس‌ها حجم زیادی دارد و رد شد');
+            continue;
+          }
+          try{
+            const dataUrl = await compressImage(file, 1600, 0.82);
+            current.push(dataUrl);
+          }catch(err){
+            console.error(err);
+            showToast('خطا در پردازش یکی از عکس‌ها');
+          }
+        }
+        e.target.value = '';
+        renderWizardStep();
+      });
+    }
+
+    const prevBtn = document.getElementById('prevBtn');
+    if(prevBtn) prevBtn.addEventListener('click', ()=>{
+      collectStepValue(step);
+      wizard.index -= 1;
+      renderWizardStep();
+    });
+
+    if(MONEY_KEYS.includes(step.key)){
+      const inputEl = document.getElementById('stepInput');
+      const hintEl = document.getElementById('moneyHint');
+      inputEl.addEventListener('input', ()=>{
+        hintEl.textContent = humanMoney(inputEl.value);
+      });
+    }
+
+    document.getElementById('nextBtn').addEventListener('click', ()=>{
+      collectStepValue(step);
+      if(step.required && (wizard.values[step.key]===undefined || wizard.values[step.key]==='' || wizard.values[step.key]===null)){
+        showToast('این مورد را تکمیل کنید');
+        return;
+      }
+      if(wizard.jumpToReview){
+        wizard.jumpToReview = false;
+        wizard.index = total;
+      } else {
+        wizard.index += 1;
+      }
+      renderWizardStep();
+    });
+  }
+
+  function collectStepValue(step){
+    if(step.type === 'buttons' || step.type === 'photo') return; // already set on click / file select
+    const el = document.getElementById('stepInput');
+    if(!el) return;
+    wizard.values[step.key] = el.value.trim();
+  }
+
+  function renderReview(){
+    const rows = wizard.steps.map((step, idx)=>{
+      if(step.key === 'photo'){
+        const photos = Array.isArray(wizard.values.photo) ? wizard.values.photo : [];
+        const thumbs = photos.map(src=>`<div class="photo-grid-item"><img src="${src}"></div>`).join('');
+        return `
+          <div class="review-row review-photo-row">
+            <div style="flex:1">
+              <div class="review-k">${step.label}</div>
+              <div class="review-v">${photos.length ? `<div class="photo-grid">${thumbs}</div>` : '—'}</div>
+            </div>
+            <button class="review-edit" data-jump="${idx}">${photos.length ? 'ویرایش' : 'افزودن'}</button>
+          </div>
+        `;
+      }
+      let display = wizard.values[step.key];
+      if(step.key === 'type') display = TYPE_LABELS[display] || '';
+      else if(step.key === 'parking' || step.key === 'elevator' || step.key === 'convertible') display = YESNO_LABELS[display] || '';
+      else if(step.key === 'direction') display = DIRECTION_LABELS[display] || '';
+      else if(step.key === 'rahn' || step.key === 'ejare' || step.key === 'price' || step.key === 'convertMinRahn' || step.key === 'convertMaxRahn') display = formatMoney(display);
+      else if(step.key === 'area') display = display ? `${display} متر مربع` : '';
+      if(!display) display = '—';
+      return `
+        <div class="review-row">
+          <div>
+            <div class="review-k">${step.label}</div>
+            <div class="review-v">${escapeHtml(display)}</div>
+          </div>
+          <button class="review-edit" data-jump="${idx}">ویرایش</button>
+        </div>
+      `;
+    }).join('');
+
+    wizardStepArea.innerHTML = `
+      <div class="review-list">${rows}</div>
+      <div class="wizard-actions">
+        <button class="wbtn" id="reviewBackBtn">قبلی</button>
+        <button class="wbtn primary" id="confirmSaveBtn">${wizard.mode==='edit' ? 'ذخیره تغییرات' : 'تایید و ذخیره'}</button>
+      </div>
+    `;
+
+    wizardStepArea.querySelectorAll('[data-jump]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        wizard.index = Number(btn.dataset.jump);
+        wizard.jumpToReview = true;
+        renderWizardStep();
+      });
+    });
+
+    document.getElementById('reviewBackBtn').addEventListener('click', ()=>{
+      wizard.index = wizard.steps.length - 1;
+      renderWizardStep();
+    });
+
+    document.getElementById('confirmSaveBtn').addEventListener('click', ()=>{
+      finalizeWizard();
+    });
+  }
+
+  function finalizeWizard(){
+    const record = Object.assign({}, wizard.values, { category: wizard.category });
+    if(wizard.mode === 'add'){
+      record.id = uid();
+      data.properties.push(record);
+      saveData();
+      showToast('ملک ثبت شد');
+    } else {
+      const idx = data.properties.findIndex(x=>x.id===wizard.editId);
+      if(idx > -1){
+        record.id = wizard.editId;
+        data.properties[idx] = record;
+      }
+      saveData();
+      showToast('تغییرات ذخیره شد');
+    }
+    setCategory(wizard.category);
+    wizard = null;
+    detailId = null;
+    switchView('listView');
+  }
+
+  // ---------- DETAIL VIEW ----------
+  const detailTitle = document.getElementById('detailTitle');
+  const detailSub = document.getElementById('detailSub');
+  const detailFieldsWrap = document.getElementById('detailFieldsWrap');
+  let detailId = null;
+
+  function openDetail(id){
+    detailId = id;
+    switchView('detailView');
+    renderDetail();
+  }
+
+  document.getElementById('detailBackBtn').addEventListener('click', ()=>{
+    detailId = null;
+    switchView('listView');
+    renderList();
+  });
+
+  function renderDetail(){
+    const p = data.properties.find(x=>x.id===detailId);
+    if(!p){ switchView('listView'); renderList(); return; }
+    detailTitle.textContent = `کد ${p.code} · ${TYPE_LABELS[p.type]||''}`;
+    detailSub.innerHTML = escapeHtml(CATEGORY_LABELS[p.category]) + (p.category === 'rent' && p.convertible === 'yes' ? ' <span class="convert-badge">قابل تبدیل</span>' : '');
+
+    const steps = STEP_DEFS[p.category];
+    if(!steps){
+      detailFieldsWrap.innerHTML = `<div class="empty">نوع این ملک نامعتبر است و جزئیات آن قابل نمایش نیست.</div>`;
+      return;
+    }
+    const photos = Array.isArray(p.photo) ? p.photo : (p.photo ? [p.photo] : []);
+    const photoHtml = photos.length ? `<div class="photo-grid">${photos.map(src=>`<div class="photo-grid-item" style="width:110px;height:110px"><img src="${src}"></div>`).join('')}</div>` : '';
+    const rows = steps.filter(step=> step.key !== 'photo' && step.key !== 'convertible' && step.key !== 'convertMinRahn' && step.key !== 'convertMaxRahn').map(step=>{
+      let display = p[step.key];
+      if(step.key === 'type') display = TYPE_LABELS[display] || '';
+      else if(step.key === 'parking' || step.key === 'elevator') display = YESNO_LABELS[display] || '';
+      else if(step.key === 'direction') display = DIRECTION_LABELS[display] || '';
+      else if(step.key === 'rahn' || step.key === 'ejare' || step.key === 'price' || step.key === 'convertMinRahn' || step.key === 'convertMaxRahn') display = formatMoney(display);
+      else if(step.key === 'area') display = display ? `${display} متر مربع` : '';
+      if(!display) display = '—';
+      return `
+        <div class="review-row">
+          <div>
+            <div class="review-k">${step.label}</div>
+            <div class="review-v">${escapeHtml(display)}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+    const gateHtml = (p.category === 'rent' && p.convertible === 'yes') ? renderConvertGate(p, {mini:false, uid:'detail-'+p.id}) : '';
+    detailFieldsWrap.innerHTML = `${photoHtml}<div class="review-list">${rows}</div>${gateHtml}`;
+    if(gateHtml) initConvertGate(detailFieldsWrap, 'detail-'+p.id);
+  }
+
+  // ---------- گیت تبدیل رهن به اجاره ----------
+  // نرخ ثابت: هر ۱۰۰ میلیون تومان رهن معادل ۳ میلیون تومان اجاره است
+  const CONVERT_RAHN_UNIT = 10000000;
+  const CONVERT_EJARE_UNIT = 300000;
+
+  function renderConvertGate(p, opts){
+    opts = opts || {};
+    const mini = !!opts.mini;
+    const uid = opts.uid || p.id;
+    const baseRahn = Number(p.rahn) || 0;
+    const baseEjare = Number(p.ejare) || 0;
+    // اگر مالک بازه مشخصی برای تبدیل تعیین کرده باشد (نه لزوماً تا رهن/اجاره کامل)، همان بازه رعایت می‌شود
+    const hasMin = p.convertMinRahn !== undefined && p.convertMinRahn !== null && p.convertMinRahn !== '';
+    const hasMax = p.convertMaxRahn !== undefined && p.convertMaxRahn !== null && p.convertMaxRahn !== '';
+    const fullMaxRahn = baseRahn + baseEjare * (CONVERT_RAHN_UNIT / CONVERT_EJARE_UNIT); // معادل رهن کامل (اجاره=۰)
+    const rahnFloor = hasMin ? Math.max(0, Number(p.convertMinRahn)) : 0;
+    const rahnCeil = hasMax ? Math.min(fullMaxRahn, Number(p.convertMaxRahn)) : fullMaxRahn;
+    const leftSteps = Math.max(0, Math.floor((rahnCeil - baseRahn) / CONVERT_RAHN_UNIT));   // حرکت به چپ: رهن تا سقف تعیین‌شده بالا می‌رود
+    const rightSteps = Math.max(0, Math.floor((baseRahn - rahnFloor) / CONVERT_RAHN_UNIT)); // حرکت به راست: رهن تا کف تعیین‌شده پایین می‌آید
+    const cls = 'convert-gate' + (mini ? ' convert-gate-mini' : '');
+    if(leftSteps <= 0 && rightSteps <= 0){
+      if(mini) return ''; // در حالت خلاصه، اگر مبلغی برای تبدیل نیست چیزی نشان نمی‌دهیم
+      return `
+        <div class="${cls}">
+          <div class="convert-gate-title">گیت تبدیل رهن به اجاره</div>
+          <div class="convert-gate-note">برای محاسبه تبدیل، مبلغ یا بازه‌ی تعیین‌شده این ملک کافی نیست.</div>
+        </div>
+      `;
+    }
+    const rangeNote = (hasMin || hasMax)
+      ? `تبدیل در بازه رهن ${formatMoney(rahnFloor)} تا ${formatMoney(rahnCeil)} تومان`
+      : 'هر ۱۰ میلیون تومان رهن ⇄ ۳۰۰ هزار تومان اجاره';
+    return `
+      <div class="${cls}" data-gate-uid="${uid}" data-rahn="${baseRahn}" data-ejare="${baseEjare}">
+        ${mini ? '' : `<div class="convert-gate-title">گیت تبدیل رهن به اجاره</div><div class="convert-gate-note">${rangeNote}</div>`}
+        <div class="convert-gate-values">
+          <div class="convert-gate-val"><span class="convert-gate-lbl">رهن</span><span class="convert-gate-num" data-gate-rahn="${uid}">${formatMoney(baseRahn)}</span></div>
+          <div class="convert-gate-val"><span class="convert-gate-lbl">اجاره</span><span class="convert-gate-num" data-gate-ejare="${uid}">${formatMoney(baseEjare)}</span></div>
+        </div>
+        <input type="range" class="convert-gate-slider" data-gate-slider="${uid}"
+               min="${-leftSteps}" max="${rightSteps}" step="1" value="0">
+        <div class="convert-gate-hints">
+          <span>رهن ${formatMoney(rahnCeil)}</span>
+          <span>رهن ${formatMoney(rahnFloor)}</span>
+        </div>
+        ${mini ? '' : `<button type="button" class="convert-gate-reset" data-gate-reset="${uid}">بازگشت به حالت اولیه</button>`}
+      </div>
+    `;
+  }
+
+  function initConvertGate(container, uid){
+    const wrap = container.querySelector(`.convert-gate[data-gate-uid="${uid}"]`);
+    const slider = container.querySelector(`[data-gate-slider="${uid}"]`);
+    if(!wrap || !slider) return;
+    const baseRahn = Number(wrap.dataset.rahn) || 0;
+    const baseEjare = Number(wrap.dataset.ejare) || 0;
+    const rahnOut = container.querySelector(`[data-gate-rahn="${uid}"]`);
+    const ejareOut = container.querySelector(`[data-gate-ejare="${uid}"]`);
+    const resetBtn = container.querySelector(`[data-gate-reset="${uid}"]`);
+
+    function update(){
+      const step = Number(slider.value);
+      const newEjare = Math.max(0, baseEjare + step * CONVERT_EJARE_UNIT);
+      const newRahn = Math.max(0, baseRahn - step * CONVERT_RAHN_UNIT);
+      rahnOut.textContent = formatMoney(newRahn);
+      ejareOut.textContent = formatMoney(newEjare);
+    }
+    // جلوگیری از باز شدن جزئیات ملک هنگام کشیدن گیت داخل کارت لیست
+    ['pointerdown','mousedown','touchstart','click'].forEach(evt=>{
+      slider.addEventListener(evt, e=> e.stopPropagation());
+    });
+    slider.addEventListener('input', update);
+    if(resetBtn){
+      resetBtn.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        slider.value = 0;
+        update();
+      });
+    }
+    update();
+  }
+
+  document.getElementById('detailEditBtn').addEventListener('click', ()=>{
+    try{
+      const p = data.properties.find(x=>x.id===detailId);
+      if(!p){ showToast('این ملک پیدا نشد'); return; }
+      startWizard('edit', p.category, p.id);
+    }catch(err){
+      console.error('خطا در باز کردن ویرایش ملک', err);
+      showToast('خطا در باز کردن فرم ویرایش: ' + (err && err.message ? err.message : 'نامشخص'));
+    }
+  });
+
+  document.getElementById('detailDeleteBtn').addEventListener('click', ()=>{
+    const p = data.properties.find(x=>x.id===detailId);
+    if(!p) return;
+    window.__customConfirm(`ملک با کد «${p.code}» حذف شود؟ این کار قابل بازگشت نیست.`).then(ok=>{
+      if(!ok) return;
+      data.properties = data.properties.filter(x=>x.id!==p.id);
+      saveData();
+      detailId = null;
+      switchView('listView');
+      setCategory(p.category);
+      showToast('ملک حذف شد');
+    });
+  });
+
+  // init
+  window.__ensureMelkVisible = function(){
+    // اگر فرم ثبت/ویرایش یا صفحه جزئیات از قبل باز بوده (مثلاً کاربر با swipe از این صفحه خارج شده
+    // بدون زدن دکمه بازگشت/انصراف)، باید همان صفحه دوباره نمایش داده شود، نه اینکه خالی بماند.
+    // نکته مهم: wizard باید همیشه زودتر از detailId بررسی شود، چون وقتی از صفحه جزئیات روی
+    // «ویرایش ملک» می‌زنیم، detailId هنوز مقدار قبلی را دارد و اگر detailId اول چک شود،
+    // این تابع بلافاصله دوباره صفحه جزئیات را باز می‌کند و ویرایش هرگز نمایش داده نمی‌شود.
+    window.__skipCarouselNav = true;
+    if(wizard){
+      switchView('wizardView');
+    } else if(detailId){
+      switchView('detailView');
+    } else {
+      startWizard('add', currentCategory, null);
+    }
+    window.__skipCarouselNav = false;
+  };
+
+  async function melkInit(){
+    data = await loadData();
+    wizard = null;
+    detailId = null;
+    switchView('listView');
+    renderList();
+  }
+  window.__melkReload = melkInit;
+  await melkInit();
+})();
+
+})();
+</script>
+<script>
+(function(){
+  var STORAGE_KEY = 'emlak-mojallal-visits-data-v1';
+  var IDB_NAME = 'emlak-mojallal-db';
+  var IDB_STORE = 'kv';
+  var data = { houses: [] };
+  var currentHouseId = null;
+  var editingHouseId = null;
+  var editingVisitId = null;
+
+  function openIDB(){
+    return new Promise(function(resolve, reject){
+      var req = indexedDB.open(IDB_NAME, 1);
+      req.onupgradeneeded = function(){ req.result.createObjectStore(IDB_STORE); };
+      req.onsuccess = function(){ resolve(req.result); };
+      req.onerror = function(){ reject(req.error); };
+    });
+  }
+  function idbGet(key){
+    return openIDB().then(function(db){
+      return new Promise(function(resolve, reject){
+        var tx = db.transaction(IDB_STORE, 'readonly');
+        var req = tx.objectStore(IDB_STORE).get(key);
+        req.onsuccess = function(){ resolve(req.result); };
+        req.onerror = function(){ reject(req.error); };
+      });
+    });
+  }
+  function idbSet(key, value){
+    return openIDB().then(function(db){
+      return new Promise(function(resolve, reject){
+        var tx = db.transaction(IDB_STORE, 'readwrite');
+        tx.objectStore(IDB_STORE).put(value, key);
+        tx.oncomplete = function(){ resolve(); };
+        tx.onerror = function(){ reject(tx.error); };
+      });
+    });
+  }
+  function loadData(){
+    return idbGet(STORAGE_KEY).then(function(d){
+      if(d && Array.isArray(d.houses)) return d;
+      // migrate old flat visit-list format (no house grouping) into a single bucket
+      if(d && Array.isArray(d.visits) && d.visits.length){
+        return { houses: [{
+          id: uid(), title: 'بازدیدهای قبلی', owner: '', phone: '', note: '',
+          createdAt: Date.now(), visitors: d.visits
+        }] };
+      }
+      return { houses: [] };
+    }).catch(function(){ return { houses: [] }; });
+  }
+  function saveData(){
+    return idbSet(STORAGE_KEY, data).catch(function(e){
+      console.error('خطا در ذخیره‌سازی', e);
+      showToast('خطا در ذخیره‌سازی اطلاعات');
+    });
+  }
+  function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+  function showToast(msg){
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 1800);
+  }
+  function escapeHtml(str){
+    var div = document.createElement('div');
+    div.textContent = str == null ? '' : String(str);
+    return div.innerHTML;
+  }
+  function findHouse(id){ return data.houses.find(function(h){ return h.id === id; }); }
+
+  function switchVisitsView(name){
+    ['houseListView','houseDetailView'].forEach(function(id){
+      document.getElementById(id).classList.toggle('active', id === name);
+    });
+  }
+
+  // ---------- HOUSE LIST ----------
+  var houseListWrap = document.getElementById('houseListWrap');
+  var houseSearch = document.getElementById('houseSearch');
+  houseSearch.addEventListener('input', renderHouseList);
+
+  function renderHouseList(){
+    var q = houseSearch.value.trim().toLowerCase();
+    var items = data.houses.filter(function(h){
+      return (h.title||'').toLowerCase().indexOf(q) > -1 || (h.owner||'').toLowerCase().indexOf(q) > -1;
+    }).sort(function(a,b){ return (b.createdAt||0) - (a.createdAt||0); });
+
+    if(data.houses.length === 0){
+      houseListWrap.innerHTML = '<div class="empty">هنوز خانه‌ای ثبت نشده.<br>روی + بزنید تا اولین خانه را ثبت کنید.</div>';
+      return;
+    }
+    if(items.length === 0){
+      houseListWrap.innerHTML = '<div class="empty">خانه‌ای با این مشخصات پیدا نشد.</div>';
+      return;
+    }
+    houseListWrap.innerHTML = '<div class="prop-list">' + items.map(function(h){
+      var vCount = (h.visitors||[]).length;
+      return '' +
+      '<div class="prop-card" data-id="' + h.id + '">' +
+        '<div class="prop-card-row">' +
+          '<div>' +
+            '<div class="prop-title">' + escapeHtml(h.title) + '</div>' +
+            '<div class="prop-meta">' +
+              (h.owner ? 'مالک: ' + escapeHtml(h.owner) + ' · ' : '') +
+              vCount + ' بازدیدکننده' +
+            '</div>' +
+          '</div>' +
+          '<div class="prop-right">' +
+            '<button class="del-prop" data-del="' + h.id + '" title="حذف">✕</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('') + '</div>';
+
+    houseListWrap.querySelectorAll('.prop-card-row').forEach(function(row){
+      row.addEventListener('click', function(e){
+        if(e.target.closest('.del-prop')) return;
+        openHouseDetail(row.closest('.prop-card').dataset.id);
+      });
+    });
+    houseListWrap.querySelectorAll('[data-del]').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var id = btn.dataset.del;
+        window.__customConfirm('این خانه و همه بازدیدکنندگان آن حذف شود؟').then(function(ok){
+          if(!ok) return;
+          data.houses = data.houses.filter(function(x){ return x.id !== id; });
+          saveData(); renderHouseList(); showToast('خانه حذف شد');
+        });
+      });
+    });
+  }
+
+  // ---------- HOUSE ADD/EDIT MODAL ----------
+  var houseOverlay = document.getElementById('houseOverlay');
+  var houseTitleInput = document.getElementById('houseTitleInput');
+  var houseOwnerInput = document.getElementById('houseOwnerInput');
+  var houseOwnerPhoneInput = document.getElementById('houseOwnerPhoneInput');
+  var houseNoteInput = document.getElementById('houseNoteInput');
+  var houseModalTitle = document.getElementById('houseModalTitle');
+  var confirmHouseBtn = document.getElementById('confirmHouseBtn');
+
+  function openHouseModal(id){
+    editingHouseId = id || null;
+    var h = id ? findHouse(id) : null;
+    houseModalTitle.textContent = h ? 'ویرایش خانه' : 'ثبت خانه جدید';
+    houseTitleInput.value = h ? (h.title||'') : '';
+    houseOwnerInput.value = h ? (h.owner||'') : '';
+    houseOwnerPhoneInput.value = h ? (h.phone||'') : '';
+    houseNoteInput.value = h ? (h.note||'') : '';
+    confirmHouseBtn.textContent = h ? 'ذخیره تغییرات' : 'ثبت خانه';
+    houseOverlay.classList.add('show');
+    setTimeout(function(){ houseTitleInput.focus(); }, 50);
+  }
+  document.getElementById('addHouseBtn').addEventListener('click', function(){ openHouseModal(null); });
+  document.getElementById('cancelHouseBtn').addEventListener('click', function(){ houseOverlay.classList.remove('show'); });
+  houseOverlay.addEventListener('click', function(e){ if(e.target === houseOverlay) houseOverlay.classList.remove('show'); });
+
+  confirmHouseBtn.addEventListener('click', function(){
+    var title = houseTitleInput.value.trim();
+    var owner = houseOwnerInput.value.trim();
+    var phone = houseOwnerPhoneInput.value.trim();
+    var note = houseNoteInput.value.trim();
+    if(!title){ showToast('عنوان یا آدرس خانه را وارد کنید'); return; }
+    if(editingHouseId){
+      var h = findHouse(editingHouseId);
+      h.title = title; h.owner = owner; h.phone = phone; h.note = note;
+      saveData(); houseOverlay.classList.remove('show'); renderHouseList();
+      if(currentHouseId === editingHouseId) renderHouseDetailHeader();
+      showToast('تغییرات ذخیره شد');
+    } else {
+      data.houses.push({ id: uid(), title: title, owner: owner, phone: phone, note: note, createdAt: Date.now(), visitors: [] });
+      saveData(); houseOverlay.classList.remove('show'); renderHouseList(); showToast('خانه ثبت شد');
+    }
+  });
+
+  // ---------- HOUSE DETAIL (visitors of one house) ----------
+  var houseDetailHeader = document.getElementById('houseDetailHeader');
+
+  function openHouseDetail(id){
+    currentHouseId = id;
+    switchVisitsView('houseDetailView');
+    renderHouseDetailHeader();
+    visitorSearch.value = '';
+    renderVisitorList();
+  }
+  document.getElementById('houseDetailBackBtn').addEventListener('click', function(){
+    currentHouseId = null;
+    switchVisitsView('houseListView');
+    renderHouseList();
+  });
+
+  function renderHouseDetailHeader(){
+    var h = findHouse(currentHouseId);
+    if(!h) return;
+    houseDetailHeader.innerHTML = '' +
+      '<div class="detail-title">' + escapeHtml(h.title) + '</div>' +
+      '<div class="detail-sub">' +
+        (h.owner ? 'مالک: ' + escapeHtml(h.owner) + (h.phone ? ' · ' + escapeHtml(h.phone) : '') : (h.phone ? escapeHtml(h.phone) : 'بدون اطلاعات مالک')) +
+      '</div>' +
+      (h.note ? '<div class="prop-meta" style="margin-bottom:10px;">' + escapeHtml(h.note) + '</div>' : '') +
+      '<div class="detail-actions">' +
+        '<button class="wbtn" id="houseDeleteBtn2">حذف خانه</button>' +
+        '<button class="wbtn primary" id="houseEditBtn2">ویرایش خانه</button>' +
+      '</div>';
+    document.getElementById('houseEditBtn2').addEventListener('click', function(){ openHouseModal(currentHouseId); });
+    document.getElementById('houseDeleteBtn2').addEventListener('click', function(){
+      window.__customConfirm('این خانه و همه بازدیدکنندگان آن حذف شود؟').then(function(ok){
+        if(!ok) return;
+        var id = currentHouseId;
+        data.houses = data.houses.filter(function(x){ return x.id !== id; });
+        saveData();
+        currentHouseId = null;
+        switchVisitsView('houseListView');
+        renderHouseList();
+        showToast('خانه حذف شد');
+      });
+    });
+  }
+
+  var visitListWrap = document.getElementById('visitListWrap');
+  var visitorSearch = document.getElementById('visitorSearch');
+  visitorSearch.addEventListener('input', renderVisitorList);
+
+  function renderVisitorList(){
+    var h = findHouse(currentHouseId);
+    if(!h){ visitListWrap.innerHTML = ''; return; }
+    var q = visitorSearch.value.trim().toLowerCase();
+    var items = (h.visitors||[]).filter(function(v){ return (v.name||'').toLowerCase().indexOf(q) > -1; })
+      .sort(function(a,b){
+        if((b.date||'') !== (a.date||'')) return (b.date||'').localeCompare(a.date||'');
+        return (b.createdAt||0) - (a.createdAt||0);
+      });
+    if((h.visitors||[]).length === 0){
+      visitListWrap.innerHTML = '<div class="empty">هنوز بازدیدکننده‌ای برای این خانه ثبت نشده.<br>روی + بزنید تا اولین بازدید را ثبت کنید.</div>';
+      return;
+    }
+    if(items.length === 0){
+      visitListWrap.innerHTML = '<div class="empty">بازدیدکننده‌ای با این نام پیدا نشد.</div>';
+      return;
+    }
+    visitListWrap.innerHTML = '<div class="prop-list">' + items.map(function(v){
+      return '' +
+      '<div class="visit-card" data-id="' + v.id + '">' +
+        '<div>' +
+          '<div class="visit-name">' + escapeHtml(v.name) + '</div>' +
+          (v.phone ? '<div class="visit-meta">' + escapeHtml(v.phone) + '</div>' : '') +
+          (v.date ? '<div class="visit-date">' + escapeHtml(v.date) + '</div>' : '') +
+          (v.note ? '<div class="visit-note">' + escapeHtml(v.note) + '</div>' : '') +
+        '</div>' +
+        '<div class="prop-right">' +
+          '<button class="del-prop" data-del="' + v.id + '" title="حذف">✕</button>' +
+        '</div>' +
+      '</div>';
+    }).join('') + '</div>';
+
+    visitListWrap.querySelectorAll('.visit-card').forEach(function(card){
+      card.addEventListener('click', function(e){
+        if(e.target.closest('.del-prop')) return;
+        openVisitModal(card.dataset.id);
+      });
+    });
+    visitListWrap.querySelectorAll('[data-del]').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var id = btn.dataset.del;
+        window.__customConfirm('این بازدید حذف شود؟').then(function(ok){
+          if(!ok) return;
+          var house = findHouse(currentHouseId);
+          house.visitors = house.visitors.filter(function(x){ return x.id !== id; });
+          saveData(); renderVisitorList(); renderHouseDetailHeader(); showToast('بازدید حذف شد');
+        });
+      });
+    });
+  }
+
+  // ---------- VISITOR ADD/EDIT MODAL ----------
+  var visitOverlay = document.getElementById('visitOverlay');
+  var visitNameInput = document.getElementById('visitNameInput');
+  var visitPhoneInput = document.getElementById('visitPhoneInput');
+  var visitDateInput = document.getElementById('visitDateInput');
+  var visitNoteInput = document.getElementById('visitNoteInput');
+  var visitModalTitle = document.getElementById('visitModalTitle');
+  var confirmVisitBtn = document.getElementById('confirmVisitBtn');
+
+  function openVisitModal(id){
+    editingVisitId = id || null;
+    var h = findHouse(currentHouseId);
+    var v = (id && h) ? h.visitors.find(function(x){ return x.id === id; }) : null;
+    visitModalTitle.textContent = v ? 'ویرایش بازدید' : 'ثبت بازدید جدید';
+    visitNameInput.value = v ? (v.name||'') : '';
+    visitPhoneInput.value = v ? (v.phone||'') : '';
+    visitDateInput.value = v ? (v.date||'') : '';
+    visitNoteInput.value = v ? (v.note||'') : '';
+    confirmVisitBtn.textContent = v ? 'ذخیره تغییرات' : 'ثبت بازدید';
+    visitOverlay.classList.add('show');
+    setTimeout(function(){ visitNameInput.focus(); }, 50);
+  }
+  document.getElementById('addVisitBtn').addEventListener('click', function(){ openVisitModal(null); });
+  document.getElementById('cancelVisitBtn').addEventListener('click', function(){ visitOverlay.classList.remove('show'); });
+  visitOverlay.addEventListener('click', function(e){ if(e.target === visitOverlay) visitOverlay.classList.remove('show'); });
+
+  confirmVisitBtn.addEventListener('click', function(){
+    var h = findHouse(currentHouseId);
+    if(!h) return;
+    var name = visitNameInput.value.trim();
+    var phone = visitPhoneInput.value.trim();
+    var date = visitDateInput.value.trim();
+    var note = visitNoteInput.value.trim();
+    if(!name){ showToast('نام بازدیدکننده را وارد کنید'); return; }
+    if(editingVisitId){
+      var v = h.visitors.find(function(x){ return x.id === editingVisitId; });
+      v.name = name; v.phone = phone; v.date = date; v.note = note;
+      saveData(); visitOverlay.classList.remove('show'); renderVisitorList(); showToast('تغییرات ذخیره شد');
+    } else {
+      h.visitors.push({ id: uid(), name: name, phone: phone, date: date, note: note, createdAt: Date.now() });
+      saveData(); visitOverlay.classList.remove('show'); renderVisitorList(); renderHouseDetailHeader(); showToast('بازدید ثبت شد');
+    }
+  });
+
+  window.__visitsReload = function(){
+    return loadData().then(function(d){
+      data = d;
+      currentHouseId = null;
+      switchVisitsView('houseListView');
+      renderHouseList();
+    });
+  };
+
+  // init
+  loadData().then(function(d){ data = d; renderHouseList(); });
+})();
+</script>
+
+</body>
+</html>
